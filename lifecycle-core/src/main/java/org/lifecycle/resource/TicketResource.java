@@ -23,7 +23,7 @@ public class TicketResource {
 
     @GET
     @Timed
-    public List<TicketDao> get(){
+    public List<Ticket> get(){
         return ticketDao.findAll();
     }
 

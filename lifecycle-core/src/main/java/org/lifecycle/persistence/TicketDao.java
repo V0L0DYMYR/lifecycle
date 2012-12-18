@@ -14,7 +14,7 @@ public class TicketDao {
         this.sessionFactory = sessionFactory;
     }
 
-    public List<TicketDao> findAll(){
+    public List<Ticket> findAll(){
         return session().
                 createCriteria(Ticket.class)
                 .list();
