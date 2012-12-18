@@ -1,0 +1,41 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+    <meta content="utf-8" http-equiv="encoding">
+    <title>Lifecycle</title>
+    <script type="text/javascript" src="../js/jquery.js"></script>
+    <script type="text/javascript" src="../js/underscore.js"></script>
+    <script type="text/javascript" src="../js/backbone.js"></script>
+    <script type="text/javascript">
+        Backbone.emulateJSON = true;
+        var Ticket = Backbone.Model.extend({
+            defaults: function(){
+                return {
+                    id: "",
+                    title: "new title"
+                }
+            },
+            urlRoot: "http://127.0.0.1:8080/ticket",
+            url: function(){
+                return this.urlRoot;
+            }
+        });
+        var ticket = new Ticket();
+
+        var Tickets = Backbone.Model.extend({
+            model: Ticket,
+            url: "http://127.0.0.1:8080/ticket",
+            initialize: function(){
+                this.on("all", function(e){return console.log("tickets " + e)});
+            }
+        });
+
+        var tickets = new Tickets();
+        tickets.fetch();
+    </script>
+</head>
+<body>
+
+</body>
+</html>
