@@ -1,1 +1,0 @@
-start java -jar ./target/lifecycle-server-1.0-SNAPSHOT.jar server
