@@ -2,16 +2,19 @@ package org.lifecycle.config;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.yammer.dropwizard.config.Configuration;
+import com.yammer.dropwizard.db.DatabaseConfiguration;
 
+import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
 public class Config extends Configuration {
 
-   // @NotNull
+    @Valid
+    @NotNull
     @JsonProperty
-    private String dbUrl;
+    private DatabaseConfiguration database = new DatabaseConfiguration();
 
-    public String getDbUrl() {
-        return dbUrl;
+    public DatabaseConfiguration getDatabaseConfiguration() {
+        return database;
     }
 }
