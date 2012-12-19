@@ -1,41 +1,32 @@
-<!DOCTYPE HTML>
+<!DOCTYPE html>
 <html>
 <head>
-    <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
-    <meta content="utf-8" http-equiv="encoding">
-    <title>Lifecycle</title>
-    <script type="text/javascript" src="../js/jquery.js"></script>
-    <script type="text/javascript" src="../js/underscore.js"></script>
-    <script type="text/javascript" src="../js/backbone.js"></script>
+    <meta charset="utf-8">
+    <title>hello-backbonejs</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.1/jquery.min.js"></script>
+    <script src="http://ajax.cdnjs.com/ajax/libs/json2/20110223/json2.js"></script>
+    <script src="http://ajax.cdnjs.com/ajax/libs/underscore.js/1.1.6/underscore-min.js"></script>
+    <script src="http://ajax.cdnjs.com/ajax/libs/backbone.js/0.3.3/backbone-min.js"></script>
+
     <script type="text/javascript">
-        Backbone.emulateJSON = true;
         var Ticket = Backbone.Model.extend({
-            defaults: function(){
-                return {
-                    id: "",
-                    title: "new title"
-                }
-            },
-            urlRoot: "http://127.0.0.1:8080/ticket",
-            url: function(){
-                return this.urlRoot;
+            defaults: {
+                id: null,
+                title: 'default title'
             }
+
         });
         var ticket = new Ticket();
 
-        var Tickets = Backbone.Model.extend({
+        var TicketList = Backbone.Collection.extend({
             model: Ticket,
-            url: "http://127.0.0.1:8080/ticket",
-            initialize: function(){
-                this.on("all", function(e){return console.log("tickets " + e)});
-            }
+            url: "http://localhost:8000/ticket"
         });
+        var ticketList = new TicketList();
 
-        var tickets = new Tickets();
-        tickets.fetch();
     </script>
 </head>
 <body>
-
+Backbone.js
 </body>
 </html>
