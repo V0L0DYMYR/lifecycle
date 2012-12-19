@@ -17,4 +17,8 @@ public class Config extends Configuration {
     public DatabaseConfiguration getDatabaseConfiguration() {
         return database;
     }
+
+    public void setDatabase(DatabaseConfiguration database) {
+        this.database = database;
+    }
 }

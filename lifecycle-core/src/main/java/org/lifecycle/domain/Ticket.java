@@ -20,6 +20,8 @@ public class Ticket {
         this.title = title;
     }
 
+    public Ticket(){}
+
     public Long getId() {
         return id;
     }

@@ -24,9 +24,13 @@ public class Service extends com.yammer.dropwizard.Service<Config> {
 
     @Override
     public void run(Config config, Environment env) throws Exception {
-        final TicketDao ticketDao = new TicketDao(hibernate.getSessionFactory());
-        env.addResource(new TicketResource(ticketDao));
+        env.addResource(createTicketResource());
 
+    }
+
+    public TicketResource createTicketResource() {
+        final TicketDao ticketDao = new TicketDao(hibernate.getSessionFactory());
+        return new TicketResource(ticketDao);
     }
 
     private final HibernateBundle<Config> hibernate = new HibernateBundle<Config>(Ticket.class) {

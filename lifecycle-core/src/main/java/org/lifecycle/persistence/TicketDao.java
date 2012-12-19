@@ -6,6 +6,8 @@ import org.lifecycle.domain.Ticket;
 
 import java.util.List;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 public class TicketDao {
 
     private final SessionFactory sessionFactory;
@@ -21,10 +23,10 @@ public class TicketDao {
     }
 
     public void save(Ticket ticket) {
-        session().save(ticket);
+        session().saveOrUpdate(checkNotNull(ticket));
     }
 
     protected Session session() {
-        return sessionFactory.openSession();
+        return sessionFactory.getCurrentSession();
     }
 }

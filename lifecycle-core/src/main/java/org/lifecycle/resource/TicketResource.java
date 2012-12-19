@@ -1,6 +1,6 @@
 package org.lifecycle.resource;
 
-import com.yammer.metrics.annotation.Timed;
+import com.yammer.dropwizard.hibernate.UnitOfWork;
 import org.lifecycle.domain.Ticket;
 import org.lifecycle.persistence.TicketDao;
 
@@ -22,12 +22,13 @@ public class TicketResource {
     }
 
     @GET
-    @Timed
+    @UnitOfWork
     public List<Ticket> get(){
         return ticketDao.findAll();
     }
 
     @POST
+    @UnitOfWork
     public void save(Ticket ticket){
         ticketDao.save(ticket);
     }
