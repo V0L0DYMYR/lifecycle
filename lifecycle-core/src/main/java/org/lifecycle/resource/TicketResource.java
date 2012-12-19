@@ -4,10 +4,7 @@ import com.yammer.dropwizard.hibernate.UnitOfWork;
 import org.lifecycle.domain.Ticket;
 import org.lifecycle.persistence.TicketDao;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import java.util.List;
 
@@ -30,6 +27,13 @@ public class TicketResource {
     @POST
     @UnitOfWork
     public void save(Ticket ticket){
-        ticketDao.save(ticket);
+        ticketDao.persist(ticket);
+    }
+
+    @DELETE
+    @Path("{id}")
+    @UnitOfWork
+    public void delete(@PathParam("id") Long id){
+        ticketDao.delete(id);
     }
 }
