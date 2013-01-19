@@ -2,31 +2,27 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>hello-backbonejs</title>
+    <title>Ticket List</title>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.1/jquery.min.js"></script>
     <script src="http://ajax.cdnjs.com/ajax/libs/json2/20110223/json2.js"></script>
     <script src="http://ajax.cdnjs.com/ajax/libs/underscore.js/1.1.6/underscore-min.js"></script>
     <script src="http://ajax.cdnjs.com/ajax/libs/backbone.js/0.3.3/backbone-min.js"></script>
-
+    <script src="http://localhost:8000/main.js"></script>
+    <script type="type/tempale" id="ticket_tmpl">
+        <li><%= model.title %></li>
+    </script>
     <script type="text/javascript">
-        var Ticket = Backbone.Model.extend({
-            defaults: {
-                id: null,
-                title: 'default title'
-            }
-
+        $(document).ready(function() {
+            var tl = new TicketList();
+            tl.add(new Ticket({ title:'A Title' }));
+            tl.add(new Ticket({ title:'B Title' }));
+            var tlv = new TicketListView({collection: tl});
+        tlv.render();
         });
-        var ticket = new Ticket();
-
-        var TicketList = Backbone.Collection.extend({
-            model: Ticket,
-            url: "http://localhost:8000/ticket"
-        });
-        var ticketList = new TicketList();
-
     </script>
 </head>
 <body>
-Backbone.js
+Tickets
+    <div id="ticket_list"></div>
 </body>
 </html>
