@@ -3,13 +3,21 @@
 <head>
     <meta charset="utf-8">
     <title>Ticket List</title>
+    <link href="http://localhost:8000/bootstrap.min.css" rel="stylesheet" media="screen">
+    <style type="text/css">
+        body {
+        padding-top: 60px;
+        padding-bottom: 40px; }
+    </style>
+
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.1/jquery.min.js"></script>
     <script src="http://ajax.cdnjs.com/ajax/libs/json2/20110223/json2.js"></script>
     <script src="http://ajax.cdnjs.com/ajax/libs/underscore.js/1.1.6/underscore-min.js"></script>
     <script src="http://ajax.cdnjs.com/ajax/libs/backbone.js/0.3.3/backbone-min.js"></script>
+    <script src="http://localhost:8000/bootstrap.min.js"></script>
     <script src="http://localhost:8000/main.js"></script>
     <script type="type/tempale" id="ticket_tmpl">
-        <li><%= model.title %></li>
+        <li><a href="#"><%= model.title %></a></li>
     </script>
     <script type="text/javascript">
         $(document).ready(function() {
@@ -22,7 +30,19 @@
     </script>
 </head>
 <body>
-Tickets
-    <div id="ticket_list"></div>
+    <div class="navbar navbar-inverse navbar-fixed-top">
+        <div class="navbar-inner">
+            <div id="container">
+                <ul class="nav">
+                    <li class="divider-vertical" class="active"><a href="#">Home</a></li>
+                    <li class="divider-vertical"><a href="#">About</a></li>
+                    <li><a href="#">Contact</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="well span3 bs-docs-sidebar">
+        <ul id="ticket_list" class="nav nav-list bs-docs-sidenav"></ul>
+    </div>
 </body>
 </html>
