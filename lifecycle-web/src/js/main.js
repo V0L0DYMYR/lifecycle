@@ -12,11 +12,22 @@ var TicketList = Backbone.Collection.extend({
 
 var TicketView = Backbone.View.extend({
     template: '#ticket_tmpl',
+    tagName:  "tr",
+    initialize: function() {
+          this.listenTo(this.model, 'change', this.render);
+          this.listenTo(this.model, 'destroy', this.remove);
+    },
     render: function(){
-        var tmplMarkup = $(this.template).html();
+        var tmplMarkup = $('#ticket_tmpl').html();
         var tmplCompiled =_.template(tmplMarkup, {model:this.model.toJSON()});
-        $(this.el).append(tmplCompiled);
+        this.$el.html(tmplCompiled);
         return this;
+    },
+    events:{
+        "click button.delete" : "clear"
+    },
+    clear:function(){
+        this.model.destroy();
     }
 });
 
@@ -27,7 +38,7 @@ var TicketListView = Backbone.View.extend({
         var el = $(this.el);
         el.empty();
         this.collection.each(function(model){
-            el.append(new TicketView({model:model, el:that.el}).render());
+            el.append(new TicketView({model:model}).render().el);
         });
     }
 });
