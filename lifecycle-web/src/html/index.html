@@ -22,13 +22,14 @@
     </script>
     <script type="text/javascript">
         $(document).ready(function() {
-            var tl = new TicketList();
-            tl.create(new Ticket({title:'A Title' }));
-            tl.create(new Ticket({title:'B Title' }));
-            tl.create(new Ticket({title:'Add Create Button' }));
-            tl.fetch();
-            var tlv = new TicketListView({collection: tl});
-        tlv.render();
+            //tl.create(new Ticket({title:'A Title' }));
+
+            var tickets = new TicketList();
+            tickets.fetch({success: function() {
+                var tlv = new TicketListView({collection: tickets});
+                tlv.render();
+            }});
+
         });
     </script>
 </head>
