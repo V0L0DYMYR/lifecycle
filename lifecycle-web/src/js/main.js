@@ -10,7 +10,7 @@ var TicketList = Backbone.Collection.extend({
     url: "http://localhost:8000/ticket"
 });
 
-var TicketView = Backbone.View.extend({
+var TicketRowView = Backbone.View.extend({
     template: '#ticket_tmpl',
     tagName:  "tr",
     initialize: function() {
@@ -33,12 +33,38 @@ var TicketView = Backbone.View.extend({
 
 var TicketListView = Backbone.View.extend({
     el:'#ticket_list',
+    initialize: function(){
+          _.bindAll(this, 'render');
+           this.render();
+    },
     render: function(){
         var that = this;
         var el = $(this.el);
         el.empty();
         this.collection.each(function(model){
-            el.append(new TicketView({model:model}).render().el);
+            el.append(new TicketRowView({model:model}).render().el);
         });
+    }
+});
+
+var TicketPageView = Backbone.View.extend({
+    initialize:function(){
+
+    },
+    render:function(){
+
+    }
+});
+
+var TicketRouter = Backbone.Router.extend({
+    routes: {
+        "newTicket":    "newTicket",
+        "editTicket/:ticketId":"edit"
+    },
+    newTicket:function(){
+        console.log("new ticket");
+    },
+    edit:function(){
+        console.log("edit ticket");
     }
 });
