@@ -18,16 +18,33 @@
     <script src="http://localhost:8000/main.js"></script>
     <script type="type/tempale" id="ticket_tmpl">
         <td><a href="#"><%= model.title %></a></td>
-            <td><button type="submit" class="btn btn-danger delete">Delete</button></td>
+        <td><button type="submit" class="btn btn-danger delete">Delete</button></td>
+    </script>
+    <script type="type/tempale" id="ticket_page_tmpl">
+        <form class="form-horizontal">
+            <fieldset>
+                <div class="control-group">
+                    <label class="control-label">Title </label>
+                    <div class="controls">
+                        <input type="text" id="inputTitle">
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label class="control-label">Description </label>
+                    <div class="controls">
+                        <input type="text" id="inputDescription">
+                    </div>
+                </div>
+                <div class="control-group">
+                    <div class="controls">
+                        <a href="#" type="submit" class="btn btn-primary saveTicket">Save</a>
+                    </div>
+                </div>
+            </fieldset>
+        </form>
     </script>
     <script type="text/javascript">
         $(document).ready(function() {
-            //tl.create(new Ticket({title:'A Title' }));
-
-            var tickets = new TicketList();
-            tickets.fetch({success: function() {
-                var tlv = new TicketListView({collection: tickets});
-            }});
 
             var router = new TicketRouter();
             Backbone.history.start();
@@ -39,45 +56,16 @@
         <div class="navbar-inner">
             <div id="container">
                 <ul class="nav">
-                    <li class="divider-vertical" class="active"><a href="#">Home</a></li>
-                    <li class="divider-vertical"><a href="#">About</a></li>
-                    <li><a href="#">Contact</a></li>
+                    <li class="divider-vertical" class="active"><a href="#allTickets">All Tickets</a></li>
+                    <li class="divider-vertical"><a  href="#addTicketDialog">+ new Ticket</a></li>
+                    <li><a href="#">Feature request</a></li>
                 </ul>
             </div>
         </div>
     </div>
-    <div class="well span3">
-        <button class="btn btn-primary" href="#addDialog" data-toggle="modal">new Ticket</button>
+    <div class="span10">
         <table id="ticket_list" class="table"></table>
-    </div>
-
-
-    <div id="addDialog" class="modal hide fade">
-        <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-            <h3>Add new ticket</h3>
-        </div>
-        <div class="modal-body">
-            <form class="form-horizontal">
-                <fieldset>
-                    <div class="control-group">
-                        <label class="control-label">Title </label>
-                        <div class="controls">
-                            <input type="text" id="inputTitle">
-                        </div>
-                    </div>
-                    <div class="control-group">
-                        <label class="control-label">Description </label>
-                        <div class="controls">
-                            <input type="text" id="inputDescription">
-                        </div>
-                    </div>
-                </fieldset>
-            </form>
-        </div>
-        <div class="modal-footer">
-            <a href="#newTicket" type="submit" class="btn btn-primary saveTicket">Save</a>
-        </div>
+        <div id="ticketDialog"></div>
     </div>
 </body>
 </html>

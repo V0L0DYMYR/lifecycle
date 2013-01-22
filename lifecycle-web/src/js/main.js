@@ -34,8 +34,10 @@ var TicketRowView = Backbone.View.extend({
 var TicketListView = Backbone.View.extend({
     el:'#ticket_list',
     initialize: function(){
-          _.bindAll(this, 'render');
-           this.render();
+          this.collection = new TicketList();
+          this.listenTo(this.collection, 'change', this.render);
+          this.listenTo(this.collection, 'reset', this.render);
+          this.collection.fetch();
     },
     render: function(){
         var that = this;
@@ -48,23 +50,46 @@ var TicketListView = Backbone.View.extend({
 });
 
 var TicketPageView = Backbone.View.extend({
+    el:'#ticketDialog',
     initialize:function(){
-
+       this.render();
     },
     render:function(){
-
+        var template =  _.template($('#ticket_page_tmpl').html());
+        var context = {model:this.model.toJSON()};
+        var html = template(context);
+        $(this.el).html(html);
+        return this;
     }
 });
 
 var TicketRouter = Backbone.Router.extend({
+    initialize:function(){
+        this.allTicketsView = new TicketListView();
+        this.ticketPage = new TicketPageView({model:new Ticket()});
+        this.views = [this.allTicketsView, this.ticketPage];
+    },
     routes: {
-        "newTicket":    "newTicket",
+        "allTickets":   "allTickets",
+        "addTicketDialog":    "newTicket",
         "editTicket/:ticketId":"edit"
     },
+    allTickets:function(){
+        this.hideAll();
+        $(this.allTicketsView.el).show();
+        console.log("all tickets");
+    },
     newTicket:function(){
+        this.hideAll();
+        $(this.ticketPage.el).show();
         console.log("new ticket");
     },
     edit:function(){
         console.log("edit ticket");
+    },
+    hideAll:function(){
+        _.each(this.views, function(view){
+            $(view.el).hide();
+        });
     }
 });
