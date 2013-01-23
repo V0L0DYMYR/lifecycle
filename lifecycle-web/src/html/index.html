@@ -17,7 +17,7 @@
     <script src="http://localhost:8000/bootstrap.min.js"></script>
     <script src="http://localhost:8000/main.js"></script>
     <script type="type/tempale" id="ticket_tmpl">
-        <td><a href="#"><%= model.title %></a></td>
+        <td><a href="#addTicketDialog/<%=model.id%>"><%= model.title %></a></td>
         <td><button type="submit" class="btn btn-danger delete">Delete</button></td>
     </script>
     <script type="type/tempale" id="ticket_page_tmpl">
