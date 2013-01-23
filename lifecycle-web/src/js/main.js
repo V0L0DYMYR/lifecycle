@@ -1,7 +1,7 @@
 var Ticket = Backbone.Model.extend({
-            defaults: {
-            id: null,
-            title: 'default title'
+    defaults: {
+        id: null,
+        title: 'default title'
     }
 });
 
@@ -34,9 +34,9 @@ var TicketRowView = Backbone.View.extend({
 var TicketListView = Backbone.View.extend({
     el:'#ticket_list',
     initialize: function(){
-          this.collection = new TicketList();
           this.listenTo(this.collection, 'change', this.render);
           this.listenTo(this.collection, 'reset', this.render);
+          this.listenTo(this.collection, 'add', this.render);
           this.collection.fetch();
     },
     render: function(){
@@ -54,6 +54,7 @@ var TicketPageView = Backbone.View.extend({
     initialize:function(){
         this.render();
     },
+    model: new Ticket(),
     render:function(){
         var template =  _.template($('#ticket_page_tmpl').html());
         var context = {model:this.model.toJSON()};
@@ -67,19 +68,21 @@ var TicketPageView = Backbone.View.extend({
     },
     contentChanged:function(e){
         this.inputTicketTitle = this.$('#inputTicketTitle');
-         var input = this.inputTicketTitle.val();
-         this.model.set({title:input});
-         console.log('input ' + input);
+        var input = this.inputTicketTitle.val();
+        this.model.set({title:input});
+        console.log('input ' + input);
     },
     saveTicket:function(){
+        this.collection.create(this.model);
         console.log("save ", this.model.get('title'));
     }
 });
 
 var TicketRouter = Backbone.Router.extend({
     initialize:function(){
-        this.allTicketsView = new TicketListView();
-        this.ticketPage = new TicketPageView({model:new Ticket()});
+        var tickets = new TicketList();
+        this.allTicketsView = new TicketListView({collection:tickets});
+        this.ticketPage = new TicketPageView({collection:tickets});
         this.views = [this.allTicketsView, this.ticketPage];
         this.hideAll();
     },
