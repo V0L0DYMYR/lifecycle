@@ -75,7 +75,7 @@ public class AbstractDao<E> {
         return session().createQuery(checkNotNull(s));
     }
 
-    public E persist(E entity) throws HibernateException {
+    public E saveOrUpdate(E entity) throws HibernateException {
         session().saveOrUpdate(checkNotNull(entity));
         return entity;
     }

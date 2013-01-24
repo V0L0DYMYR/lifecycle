@@ -10,6 +10,7 @@ import java.util.List;
 
 @Path("/ticket")
 @Produces(MediaType.APPLICATION_JSON)
+@Consumes(MediaType.APPLICATION_JSON)
 public class TicketResource {
 
     private TicketDao ticketDao;
@@ -27,7 +28,13 @@ public class TicketResource {
     @POST
     @UnitOfWork
     public void save(Ticket ticket){
-        ticketDao.persist(ticket);
+        ticketDao.saveOrUpdate(ticket);
+    }
+
+    @PUT @Path("{id}")
+    @UnitOfWork
+    public void amend(Ticket ticket){
+        ticketDao.saveOrUpdate(ticket);
     }
 
     @DELETE
