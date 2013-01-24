@@ -7,7 +7,10 @@ var Ticket = Backbone.Model.extend({
 
 var TicketList = Backbone.Collection.extend({
     model: Ticket,
-    url: "http://localhost:8000/ticket"
+    url: "http://localhost:8000/ticket",
+    initialize:function(){
+        this.fetch();
+    }
 });
 
 var TicketRowView = Backbone.View.extend({
@@ -37,7 +40,6 @@ var TicketListView = Backbone.View.extend({
           this.listenTo(this.collection, 'change', this.render);
           this.listenTo(this.collection, 'reset', this.render);
           this.listenTo(this.collection, 'add', this.render);
-          this.collection.fetch();
     },
     render: function(){
         var that = this;
@@ -53,10 +55,10 @@ var TicketPageView = Backbone.View.extend({
     el:'#ticketDialog',
     initialize:function(){
         this.model = new Ticket();
-        this.listenTo(this.model, 'reset', this.render);
         this.render();
     },
     render:function(){
+        console.log('render TicketPageView');
         var template =  _.template($('#ticket_page_tmpl').html());
         var context = {model:this.model.toJSON()};
         var html = template(context);
@@ -78,9 +80,13 @@ var TicketPageView = Backbone.View.extend({
         console.log("save ", this.model.get('title'));
     },
     populateModel:function(ticketId){
-        this.model = this.collection.find(function(model){
-                return Number(model.get('id')) === ticketId;
-            });
+        console.log('populate model id=' + ticketId);
+        this.model = this.collection.get(ticketId);
+        this.render();
+    },
+    populateEmptyModel:function(){
+        this.model = new Ticket();
+        this.render();
     }
 });
 
@@ -103,13 +109,13 @@ var TicketRouter = Backbone.Router.extend({
     },
     newTicket:function(){
         this.hideAll();
+        this.ticketPage.populateEmptyModel();
         $(this.ticketPage.el).show();
     },
     edit:function(ticketId){
         this.hideAll();
         this.ticketPage.populateModel(ticketId);
         $(this.ticketPage.el).show();
-        console.log("edit ticket");
     },
     hideAll:function(){
         _.each(this.views, function(view){
