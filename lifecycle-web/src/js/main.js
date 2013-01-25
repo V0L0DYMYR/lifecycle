@@ -11,6 +11,9 @@ var TicketList = Backbone.Collection.extend({
     url: "http://localhost:8000/ticket",
     initialize:function(){
         this.fetch();
+    },
+    comparator:function(node){
+        return -node.get('priority');
     }
 });
 
