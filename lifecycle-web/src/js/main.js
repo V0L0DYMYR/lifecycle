@@ -1,7 +1,8 @@
 var Ticket = Backbone.Model.extend({
     defaults: {
         id: null,
-        title: 'default title'
+        title: 'default title',
+        priority:0
     }
 });
 
@@ -67,13 +68,17 @@ var TicketPageView = Backbone.View.extend({
     },
     events:{
         "click a#saveTicket" : "saveTicket",
-        "change input#inputTicketTitle":  "contentChanged"
+        "change input#inputTicketTitle":  "contentChanged",
+        "change select#inputTicketPriority":  "contentChanged"
+    },
+    bindInputToModel:function(inputTagId, fieldName){
+        var element = this.$(inputTagId);
+        var input = element.val();
+        this.model.set(fieldName, input);
     },
     contentChanged:function(e){
-        this.inputTicketTitle = this.$('#inputTicketTitle');
-        var input = this.inputTicketTitle.val();
-        this.model.set({title:input});
-        console.log('input ' + input);
+        this.bindInputToModel('#inputTicketTitle', 'title');
+        this.bindInputToModel('#inputTicketPriority', 'priority');
     },
     saveTicket:function(){
         this.collection.create(this.model);

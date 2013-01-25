@@ -10,6 +10,6 @@ public class JsonTest {
     @Test
     public void jsonTicket() throws Exception{
         fromJson(jsonFixture("json/Ticket.json"), Ticket.class);
-        asJson(new Ticket(null, "Title"));
+        asJson(new Ticket(null, "Title", 1));
     }
 }

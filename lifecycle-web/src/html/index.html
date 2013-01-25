@@ -17,6 +17,7 @@
     <script src="http://localhost:8000/bootstrap.min.js"></script>
     <script src="http://localhost:8000/main.js"></script>
     <script type="type/tempale" id="ticket_tmpl">
+        <td><%= model.priority%></td>
         <td><a href="#addTicketDialog/<%=model.id%>"><%= model.title %></a></td>
         <td><button type="submit" class="btn btn-danger delete">Delete</button></td>
     </script>
@@ -30,9 +31,16 @@
                     </div>
                 </div>
                 <div class="control-group">
-                    <label class="control-label">Description </label>
+                    <label class="control-label">Priority</label>
                     <div class="controls">
-                        <input type="text" id="inputDescription">
+                        <select id="inputTicketPriority">
+                            <option>0</option>
+                            <option>1</option>
+                            <option>2</option>
+                            <option>3</option>
+                            <option>4</option>
+                            <option>5</option>
+                        </select>
                     </div>
                 </div>
                 <div class="control-group">
