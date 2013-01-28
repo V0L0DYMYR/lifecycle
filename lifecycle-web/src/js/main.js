@@ -41,9 +41,9 @@ var TicketRowView = Backbone.View.extend({
 var TicketListView = Backbone.View.extend({
     el:'#ticket_list',
     initialize: function(){
-          this.listenTo(this.collection, 'change', this.render);
-          this.listenTo(this.collection, 'reset', this.render);
-         // this.ticketEvent.on("renderAllTickets_event", this.render);
+        this.listenTo(this.collection, 'change', this.render);
+        this.listenTo(this.collection, 'reset', this.render);
+        Backbone.pubSub.on('my-event', this.render, this);
     },
     render: function(){
         var that = this;
@@ -87,8 +87,8 @@ var TicketPageView = Backbone.View.extend({
     },
     saveTicket:function(){
         var renderAllTickets = function(){
-            ticketEvent.trigger("renderAllTickets_event");
             console.log('allTickets should be re-rendered');
+            Backbone.pubSub.trigger('my-event');
         };
         this.collection.create(this.model, { silent: true, wait: true, success:renderAllTickets});
         console.log("save ", this.model);
@@ -121,15 +121,14 @@ var FeatureRequestsPage = Backbone.View.extend({
 var TicketRouter = Backbone.Router.extend({
     initialize:function(){
         //events
-        var ticketEvent = {};
-        _.extend(ticketEvent, Backbone.Events);
+        Backbone.pubSub = _.extend({}, Backbone.Events);
 
         //collections
         var tickets = new TicketList();
 
         //views
-        this.allTicketsView = new TicketListView({collection:tickets, ticketEvent:ticketEvent});
-        this.ticketPage = new TicketPageView({collection:tickets, ticketEvent:ticketEvent});
+        this.allTicketsView = new TicketListView({collection:tickets});
+        this.ticketPage = new TicketPageView({collection:tickets});
         this.featureRequest = new FeatureRequestsPage();
 
         this.views = [this.allTicketsView, this.ticketPage, this.featureRequest];
