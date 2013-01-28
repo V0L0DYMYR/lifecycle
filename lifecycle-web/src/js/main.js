@@ -19,7 +19,7 @@ var TicketList = Backbone.Collection.extend({
 
 var TicketRowView = Backbone.View.extend({
     template: '#ticket_tmpl',
-    tagName:  "tr",
+    tagName: 'tr',
     initialize: function() {
           this.listenTo(this.model, 'change', this.render);
           this.listenTo(this.model, 'destroy', this.remove);
@@ -43,14 +43,16 @@ var TicketListView = Backbone.View.extend({
     initialize: function(){
           this.listenTo(this.collection, 'change', this.render);
           this.listenTo(this.collection, 'reset', this.render);
-          this.listenTo(this.collection, 'add', this.render);
+         // this.ticketEvent.on("renderAllTickets_event", this.render);
     },
     render: function(){
         var that = this;
         var el = $(this.el);
         el.empty();
+        el.append($('#ticket_table_tmpl').html());
+        var tbody = $('#ticket_list_body');
         this.collection.each(function(model){
-            el.append(new TicketRowView({model:model}).render().el);
+            tbody.append(new TicketRowView({model:model}).render().el);
         });
     }
 });
@@ -84,8 +86,12 @@ var TicketPageView = Backbone.View.extend({
         this.bindInputToModel('#inputTicketPriority', 'priority');
     },
     saveTicket:function(){
-        this.collection.create(this.model);
-        console.log("save ", this.model.get('title'));
+        var renderAllTickets = function(){
+            ticketEvent.trigger("renderAllTickets_event");
+            console.log('allTickets should be re-rendered');
+        };
+        this.collection.create(this.model, { silent: true, wait: true, success:renderAllTickets});
+        console.log("save ", this.model);
     },
     populateModel:function(ticketId){
         console.log('populate model id=' + ticketId);
@@ -98,22 +104,51 @@ var TicketPageView = Backbone.View.extend({
     }
 });
 
+
+var FeatureRequestsPage = Backbone.View.extend({
+   el:'#feature_request_page',
+   initialize:function(){
+        this.render();
+   },
+   render:function(){
+       var el = $(this.el);
+       el.empty();
+       el.append($('#feature_request_tmpl').html());
+       return this;
+   }
+});
+
 var TicketRouter = Backbone.Router.extend({
     initialize:function(){
+        //events
+        var ticketEvent = {};
+        _.extend(ticketEvent, Backbone.Events);
+
+        //collections
         var tickets = new TicketList();
-        this.allTicketsView = new TicketListView({collection:tickets});
-        this.ticketPage = new TicketPageView({collection:tickets});
-        this.views = [this.allTicketsView, this.ticketPage];
+
+        //views
+        this.allTicketsView = new TicketListView({collection:tickets, ticketEvent:ticketEvent});
+        this.ticketPage = new TicketPageView({collection:tickets, ticketEvent:ticketEvent});
+        this.featureRequest = new FeatureRequestsPage();
+
+        this.views = [this.allTicketsView, this.ticketPage, this.featureRequest];
         this.allTickets();
     },
     routes: {
         "allTickets":   "allTickets",
         "addTicketDialog":    "newTicket",
-        "addTicketDialog/:ticketId":"edit"
+        "addTicketDialog/:ticketId":"edit",
+        "featureRequest":"featureRequest"
+    },
+    featureRequest:function(){
+        this.hideAll();
+        $(this.featureRequest.el).show();
     },
     allTickets:function(){
         this.hideAll();
         $(this.allTicketsView.el).show();
+        this.allTicketsView.render();
     },
     newTicket:function(){
         this.hideAll();

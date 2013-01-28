@@ -16,6 +16,20 @@
     <script src="http://ajax.cdnjs.com/ajax/libs/backbone.js/0.9.10/backbone-min.js"></script>
     <script src="http://localhost:8000/bootstrap.min.js"></script>
     <script src="http://localhost:8000/main.js"></script>
+    <script type="type/tempale" id="feature_request_tmpl">
+        <p>features ...</p>
+    </script>
+    <script type="type/tempale" id="ticket_table_tmpl">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Priority</th>
+                    <th>Title</th>
+                </tr>
+            </thead>
+            <tbody id="ticket_list_body"></tbody>
+        </table>
+    </script>
     <script type="type/tempale" id="ticket_tmpl">
         <td><%= model.priority%></td>
         <td><a href="#addTicketDialog/<%=model.id%>"><%= model.title %></a></td>
@@ -45,7 +59,7 @@
                 </div>
                 <div class="control-group">
                     <div class="controls">
-                        <a id="saveTicket" href="#addTicketDialog" type="submit" class="btn btn-primary">Save</a>
+                        <a id="saveTicket" href="#allTickets" type="submit" class="btn btn-primary">Save</a>
                     </div>
                 </div>
             </fieldset>
@@ -53,7 +67,6 @@
     </script>
     <script type="text/javascript">
         $(document).ready(function() {
-
             var router = new TicketRouter();
             Backbone.history.start();
         });
@@ -66,14 +79,15 @@
                 <ul class="nav">
                     <li class="divider-vertical" class="active"><a href="#allTickets">All Tickets</a></li>
                     <li class="divider-vertical"><a  href="#addTicketDialog">+ new Ticket</a></li>
-                    <li><a href="#">Feature request</a></li>
+                    <li><a href="#featureRequest">Feature requests</a></li>
                 </ul>
             </div>
         </div>
     </div>
     <div class="span10">
-        <table id="ticket_list" class="table"></table>
+        <div id="ticket_list"></div>
         <div id="ticketDialog"></div>
+        <div id="feature_request_page"></div>
     </div>
 </body>
 </html>

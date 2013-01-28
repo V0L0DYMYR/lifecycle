@@ -27,14 +27,14 @@ public class TicketResource {
 
     @POST
     @UnitOfWork
-    public void save(Ticket ticket){
-        ticketDao.saveOrUpdate(ticket);
+    public Ticket save(Ticket ticket){
+        return ticketDao.saveOrUpdate(ticket);
     }
 
     @PUT @Path("{id}")
     @UnitOfWork
-    public void amend(Ticket ticket){
-        ticketDao.saveOrUpdate(ticket);
+    public Ticket amend(Ticket ticket){
+        return ticketDao.saveOrUpdate(ticket);
     }
 
     @DELETE
