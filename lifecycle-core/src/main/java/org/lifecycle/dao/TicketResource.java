@@ -1,4 +1,4 @@
-package org.lifecycle.resource;
+package org.lifecycle.dao;
 
 import com.yammer.dropwizard.hibernate.UnitOfWork;
 import org.lifecycle.domain.Ticket;

@@ -46,12 +46,11 @@
                     <label class="control-label">Priority</label>
                     <div class="controls">
                         <select id="inputTicketPriority">
-                            <option>0</option>
-                            <option>1</option>
-                            <option>2</option>
-                            <option>3</option>
-                            <option>4</option>
-                            <option>5</option>
+                          <% _.each([0,1,2,3,4,5], function(priority) { %>
+                                <option <%=priority==model.priority? 'selected':'' %>>
+                                    <%=priority%>
+                                </option>
+                          <% }); %>
                         </select>
                     </div>
                 </div>

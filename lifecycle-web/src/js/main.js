@@ -91,6 +91,7 @@ var TicketPageView = Backbone.View.extend({
             Backbone.pubSub.trigger('my-event');
         };
         this.collection.create(this.model, { silent: true, wait: true, success:renderAllTickets});
+        this.collection.sort();
         console.log("save ", this.model);
     },
     populateModel:function(ticketId){

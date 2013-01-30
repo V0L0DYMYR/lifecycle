@@ -7,7 +7,7 @@ import com.yammer.dropwizard.hibernate.HibernateBundle;
 import org.lifecycle.config.Config;
 import org.lifecycle.domain.Ticket;
 import org.lifecycle.persistence.TicketDao;
-import org.lifecycle.resource.TicketResource;
+import org.lifecycle.dao.TicketResource;
 
 
 public class Service extends com.yammer.dropwizard.Service<Config> {

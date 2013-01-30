@@ -1,4 +1,4 @@
-package org.lifecycle.resource;
+package org.lifecycle.dao;
 
 import org.junit.After;
 import org.junit.Before;
@@ -9,7 +9,7 @@ import org.lifecycle.transaction.TestUnderTransaction;
 
 import java.util.List;
 
-public class TicketResourceTest extends TestUnderTransaction{
+public class TicketDaoTest extends TestUnderTransaction{
 
     TicketDao dao;
 
