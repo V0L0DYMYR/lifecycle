@@ -1,24 +1,33 @@
 package org.lifecycle.resource;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.lifecycle.config.Config;
-import org.lifecycle.service.Service;
+import org.lifecycle.domain.Ticket;
+import org.lifecycle.persistence.TicketDao;
+import org.lifecycle.transaction.TestUnderTransaction;
 
-import static com.yammer.dropwizard.testing.JsonHelpers.fromJson;
-import static com.yammer.dropwizard.testing.JsonHelpers.jsonFixture;
+import java.util.List;
 
-public class TicketResourceTest {
+public class TicketResourceTest extends TestUnderTransaction{
+
+    TicketDao dao;
 
     @Before
     public void setUp() throws Exception{
-        Config config = fromJson(jsonFixture("conf/lifecycle.json"), Config.class);
-        Service service = new Service();
-
+        startTransaction();
+        dao = new TicketDao(getSessionFactory());
     }
 
     @Test
     public void saveTickets() {
-
+        List<Ticket> all = dao.findAll();
+        System.out.println(all);
     }
+
+    @After
+    public void tearDown(){
+        endTransaction();
+    }
+
 }

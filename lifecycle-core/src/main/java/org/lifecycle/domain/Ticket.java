@@ -2,6 +2,7 @@ package org.lifecycle.domain;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.google.common.base.Objects;
 
 import javax.persistence.*;
 
@@ -34,5 +35,14 @@ public class Ticket {
 
     public Integer getPriority() {
         return priority;
+    }
+
+    @Override
+    public String toString() {
+        return Objects.toStringHelper(this)
+                .add("id", id)
+                .add("title", title)
+                .add("priority", priority)
+                .toString();
     }
 }

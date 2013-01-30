@@ -25,7 +25,6 @@ public class Service extends com.yammer.dropwizard.Service<Config> {
     @Override
     public void run(Config config, Environment env) throws Exception {
         env.addResource(createTicketResource());
-
     }
 
     public TicketResource createTicketResource() {
