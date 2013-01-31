@@ -9,6 +9,7 @@ import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.context.internal.ManagedSessionContext;
 import org.lifecycle.config.Config;
+import org.lifecycle.domain.Label;
 import org.lifecycle.domain.Ticket;
 import org.mockito.Mockito;
 
@@ -26,8 +27,9 @@ public class TestUnderTransaction {
         return hibernateSessionFactory;
     }
 
-    protected void startTransaction() throws IOException, ClassNotFoundException {
-        hibernateSessionFactory = createHibernateSessionFactory();
+    protected void startTransaction(String configFile) throws IOException, ClassNotFoundException {
+        Config config = fromJson(jsonFixture(configFile), Config.class);
+        hibernateSessionFactory = createHibernateSessionFactory(config);
         session = openSession(hibernateSessionFactory);
         session.beginTransaction();
     }
@@ -40,11 +42,10 @@ public class TestUnderTransaction {
         return session;
     }
 
-    protected SessionFactory createHibernateSessionFactory() throws IOException, ClassNotFoundException {
-        Config config = fromJson(jsonFixture("conf/lifecycle.json"), Config.class);
+    protected SessionFactory createHibernateSessionFactory(Config config) throws IOException, ClassNotFoundException {
         SessionFactoryFactory factory = new SessionFactoryFactory();
         Environment mockEnvironment = Mockito.mock(Environment.class);
-        return factory.build(mockEnvironment, config.getDatabaseConfiguration(), asList(Ticket.class));
+        return factory.build(mockEnvironment, config.getDatabaseConfiguration(), asList(Ticket.class, Label.class));
     }
 
     protected ImmutableList<Class<?>> asList(Class<?>... classes){

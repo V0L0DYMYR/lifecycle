@@ -1,0 +1,14 @@
+{
+    "database":{
+        "driverClass": "org.apache.derby.jdbc.ClientDriver",
+        "user": "app",
+        "password": "app",
+        "url": "jdbc:derby://localhost:1527/d:\\db\\lifecycle-test;create=true ",
+        "properties":{
+            "hibernate.hbm2ddl.auto": "create-drop",
+            "hibernate.dialect": "org.hibernate.dialect.DerbyDialect",
+            "hibernate.show_sql":"true",
+            "hibernate.format_sql":"true"
+        }
+    }
+}
