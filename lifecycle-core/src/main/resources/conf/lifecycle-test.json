@@ -1,14 +1,15 @@
 {
     "database":{
-        "driverClass": "org.apache.derby.jdbc.ClientDriver",
-        "user": "app",
-        "password": "app",
-        "url": "jdbc:derby://localhost:1527/d:\\db\\lifecycle-test;create=true ",
+        "driverClass": "org.hsqldb.jdbcDriver",
+        "user": "sa",
+        "password": "",
+        "url": "jdbc:hsqldb:mem:lifecycle;DB_CLOSE_DELAY=-1",
         "properties":{
-            "hibernate.hbm2ddl.auto": "create-drop",
-            "hibernate.dialect": "org.hibernate.dialect.DerbyDialect",
+            "hibernate.hbm2ddl.auto": "create",
+            "hibernate.dialect": "org.hibernate.dialect.HSQLDialect",
             "hibernate.show_sql":"true",
-            "hibernate.format_sql":"true"
+            "hibernate.format_sql":"true",
+            "hibernate.hbm2ddl.import_files": "sql/ddl.sql"
         }
     }
 }

@@ -5,11 +5,12 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Objects;
 
 import javax.persistence.*;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@Table(name = "tickets")
+@Table(name = "TICKETS")
 public class Ticket {
 
     @Id
@@ -17,17 +18,21 @@ public class Ticket {
     private Long id;
     private String title;
     private Integer priority;
-    @ManyToMany(cascade = CascadeType.ALL)
-    @JoinTable(name = "tickets_labels",
-            joinColumns={@JoinColumn(name="ticket_id", referencedColumnName="id")},
-            inverseJoinColumns={@JoinColumn(name="label_id", referencedColumnName="id")})
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinTable(name = "TICKETS_LABELS",
+            joinColumns={@JoinColumn(name="TICKET_ID", referencedColumnName="ID")},
+            inverseJoinColumns={@JoinColumn(name="LABEL_ID", referencedColumnName="ID")})
     private Set<Label> labels;
 
     @JsonCreator
-    public Ticket(@JsonProperty("id") Long id, @JsonProperty("title") String title, @JsonProperty("priority") Integer priority) {
+    public Ticket(@JsonProperty("ID") Long id,
+                  @JsonProperty("TITLE") String title,
+                  @JsonProperty("PRIORITY") Integer priority,
+                  @JsonProperty("LABELS") Set<Label> labels) {
         this.id = id;
         this.title = title;
         this.priority = priority;
+        this.labels = initializeIfNull(labels);
     }
 
     public Ticket(){}
@@ -45,7 +50,11 @@ public class Ticket {
     }
 
     public Set<Label> getLabels() {
-        return labels;
+        return returnNotNull(labels);
+    }
+
+    private Set<Label> returnNotNull(Set<Label> labels) {
+        return labels == null? Collections.<Label>emptySet():labels;
     }
 
     public Ticket withLabel(Label label){

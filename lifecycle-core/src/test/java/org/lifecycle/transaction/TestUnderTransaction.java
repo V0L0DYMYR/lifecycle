@@ -48,14 +48,24 @@ public class TestUnderTransaction {
         return factory.build(mockEnvironment, config.getDatabaseConfiguration(), asList(Ticket.class, Label.class));
     }
 
-    protected ImmutableList<Class<?>> asList(Class<?>... classes){
+    protected ImmutableList<Class<?>> asList(Class<?>... classes) {
         return ImmutableList.copyOf(classes);
     }
-    protected void endTransaction() {
+
+    protected void rollbakTransaction() {
         ManagedSessionContext.unbind(hibernateSessionFactory);
         final Transaction txn = session.getTransaction();
         if (txn != null && txn.isActive()) {
             txn.rollback();
+        }
+        session.close();
+    }
+
+    protected void commitTransaction() {
+        ManagedSessionContext.unbind(hibernateSessionFactory);
+        final Transaction txn = session.getTransaction();
+        if (txn != null && txn.isActive()) {
+            txn.commit();
         }
         session.close();
     }

@@ -26,6 +26,10 @@ public class AbstractDao<E> {
         return session().createCriteria(entityClass);
     }
 
+    protected Criteria criteria(Class<?> clazz) {
+        return session().createCriteria(clazz);
+    }
+
     protected Query namedQuery(String queryName) throws HibernateException {
         return session().getNamedQuery(checkNotNull(queryName));
     }

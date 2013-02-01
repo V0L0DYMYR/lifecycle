@@ -6,6 +6,7 @@ import org.lifecycle.domain.Label;
 import org.lifecycle.domain.Ticket;
 
 import java.util.List;
+import java.util.Set;
 
 public class TicketDao extends AbstractDao<Ticket> {
 
@@ -15,6 +16,12 @@ public class TicketDao extends AbstractDao<Ticket> {
 
     public List<Ticket> findByLabel(Label label) {
         return list(criteria()
-                .add(Restrictions.eq("labels", label)));
+                .createCriteria("labels")
+                .add(Restrictions.eq("id", label.getId())));
+    }
+
+    public Set<Label> findByTicket(Ticket ticket){
+        return get(ticket.getId())
+                .getLabels();
     }
 }

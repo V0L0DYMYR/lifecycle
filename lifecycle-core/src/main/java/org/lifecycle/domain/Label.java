@@ -7,17 +7,17 @@ import com.google.common.base.Objects;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "labels")
+@Table(name = "LABELS")
 public class Label {
 
     @Id
     @GeneratedValue(strategy= GenerationType.TABLE)
     private Long id;
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "CHAR(255)", unique = true)
     private String text;
 
     @JsonCreator
-    public Label(@JsonProperty("id") Long id,@JsonProperty("text") String text) {
+    public Label(@JsonProperty("ID") Long id,@JsonProperty("TEXT") String text) {
         this.id = id;
         this.text = text;
     }

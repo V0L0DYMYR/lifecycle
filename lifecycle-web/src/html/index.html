@@ -4,6 +4,7 @@
     <meta charset="utf-8">
     <title>Ticket List</title>
     <link href="http://localhost:8000/bootstrap.min.css" rel="stylesheet" media="screen">
+    <link rel="shortcut icon" href="#" />
     <style type="text/css">
         body { padding-top: 60px; padding-bottom: 40px; }
     </style>
@@ -14,9 +15,6 @@
     <script src="http://localhost:8000/backbone.js"></script>
     <script src="http://localhost:8000/bootstrap.min.js"></script>
     <script src="http://localhost:8000/main.js"></script>
-    <script type="type/tempale" id="feature_request_tmpl">
-        <p>features ...</p>
-    </script>
     <script type="type/tempale" id="ticket_table_tmpl">
         <table class="table">
             <thead>
@@ -31,6 +29,11 @@
     <script type="type/tempale" id="ticket_tmpl">
         <td><%= model.priority%></td>
         <td><a href="#addTicketDialog/<%=model.id%>"><%= model.title %></a></td>
+        <td>
+            <% _.each(model.labels, function(label) { %>
+                <%=label.text%>
+            <% }); %>
+        </td>
         <td><button type="submit" class="btn btn-danger delete">Delete</button></td>
     </script>
     <script type="type/tempale" id="ticket_page_tmpl">
@@ -76,7 +79,6 @@
                 <ul class="nav">
                     <li class="divider-vertical" class="active"><a href="#allTickets">All Tickets</a></li>
                     <li class="divider-vertical"><a  href="#addTicketDialog">+ new Ticket</a></li>
-                    <li><a href="#featureRequest">Feature requests</a></li>
                 </ul>
             </div>
         </div>
@@ -84,7 +86,6 @@
     <div class="span10">
         <div id="ticket_list"></div>
         <div id="ticketDialog"></div>
-        <div id="feature_request_page"></div>
     </div>
 </body>
 </html>

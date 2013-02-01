@@ -2,7 +2,8 @@ var Ticket = Backbone.Model.extend({
     defaults: {
         id: null,
         title: 'default title',
-        priority:0
+        priority:0,
+        labels:[{id:null,text:'sprint_1'}, {id:null, text:'sprint_2'}]
     }
 });
 
@@ -105,20 +106,6 @@ var TicketPageView = Backbone.View.extend({
     }
 });
 
-
-var FeatureRequestsPage = Backbone.View.extend({
-   el:'#feature_request_page',
-   initialize:function(){
-        this.render();
-   },
-   render:function(){
-       var el = $(this.el);
-       el.empty();
-       el.append($('#feature_request_tmpl').html());
-       return this;
-   }
-});
-
 var TicketRouter = Backbone.Router.extend({
     initialize:function(){
         //events
@@ -130,20 +117,14 @@ var TicketRouter = Backbone.Router.extend({
         //views
         this.allTicketsView = new TicketListView({collection:tickets});
         this.ticketPage = new TicketPageView({collection:tickets});
-        this.featureRequest = new FeatureRequestsPage();
 
-        this.views = [this.allTicketsView, this.ticketPage, this.featureRequest];
+        this.views = [this.allTicketsView, this.ticketPage];
         this.allTickets();
     },
     routes: {
         "allTickets":   "allTickets",
         "addTicketDialog":    "newTicket",
-        "addTicketDialog/:ticketId":"edit",
-        "featureRequest":"featureRequest"
-    },
-    featureRequest:function(){
-        this.hideAll();
-        $(this.featureRequest.el).show();
+        "addTicketDialog/:ticketId":"edit"
     },
     allTickets:function(){
         this.hideAll();
