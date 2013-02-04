@@ -144,7 +144,7 @@ var TicketRouter = Backbone.Router.extend({
     ticketsWithLabel:function(label){
         this.hideAll();
         console.log('tickets with label ' + label);
-        this.tickets.fetch({data:{label:label}, success:Backbone.renderAllTickets})
+        this.tickets.fetch({url:'/ticket/label/'+label, success:Backbone.renderAllTickets})
         $(this.allTicketsView.el).show();
         this.allTicketsView.render();
     },
