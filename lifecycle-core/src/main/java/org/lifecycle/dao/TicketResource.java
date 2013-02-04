@@ -25,6 +25,13 @@ public class TicketResource {
         return ticketDao.findAll();
     }
 
+    @GET
+    @Path("/label/{label}")
+    @UnitOfWork
+    public List<Ticket> getWithLabel(@PathParam("label") String label){
+        return ticketDao.findByLabel(label);
+    }
+
     @POST
     @UnitOfWork
     public Ticket save(Ticket ticket){

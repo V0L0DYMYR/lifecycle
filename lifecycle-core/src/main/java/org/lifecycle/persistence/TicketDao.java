@@ -1,12 +1,9 @@
 package org.lifecycle.persistence;
 
 import org.hibernate.SessionFactory;
-import org.hibernate.criterion.Restrictions;
-import org.lifecycle.domain.Label;
 import org.lifecycle.domain.Ticket;
 
 import java.util.List;
-import java.util.Set;
 
 public class TicketDao extends AbstractDao<Ticket> {
 
@@ -14,14 +11,7 @@ public class TicketDao extends AbstractDao<Ticket> {
         super(sessionFactory);
     }
 
-    public List<Ticket> findByLabel(Label label) {
-        return list(criteria()
-                .createCriteria("labels")
-                .add(Restrictions.eq("id", label.getId())));
-    }
-
-    public Set<Label> findByTicket(Ticket ticket){
-        return get(ticket.getId())
-                .getLabels();
+    public List<Ticket> findByLabel(String label) {
+        return list(sql("select * from tickets t where t.id in (select l.ticket_id from LABELS l where l.label = '" + label + "')"));
     }
 }

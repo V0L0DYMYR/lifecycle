@@ -14,21 +14,23 @@ import java.util.Set;
 public class Ticket {
 
     @Id
-    @GeneratedValue(strategy= GenerationType.TABLE)
+    @GeneratedValue(strategy= GenerationType.IDENTITY)
     private Long id;
+    @Column(nullable = false)
     private String title;
     private Integer priority;
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JoinTable(name = "TICKETS_LABELS",
-            joinColumns={@JoinColumn(name="TICKET_ID", referencedColumnName="ID")},
-            inverseJoinColumns={@JoinColumn(name="LABEL_ID", referencedColumnName="ID")})
-    private Set<Label> labels;
+    @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(
+            name="LABELS",
+            joinColumns=@JoinColumn(name="TICKET_ID"))
+    @Column(name = "label", length = 255, columnDefinition = "bpchar")
+    private Set<String> labels;
 
     @JsonCreator
     public Ticket(@JsonProperty("ID") Long id,
                   @JsonProperty("TITLE") String title,
                   @JsonProperty("PRIORITY") Integer priority,
-                  @JsonProperty("LABELS") Set<Label> labels) {
+                  @JsonProperty("LABELS") Set<String> labels) {
         this.id = id;
         this.title = title;
         this.priority = priority;
@@ -49,15 +51,15 @@ public class Ticket {
         return priority;
     }
 
-    public Set<Label> getLabels() {
+    public Set<String> getLabels() {
         return returnNotNull(labels);
     }
 
-    private Set<Label> returnNotNull(Set<Label> labels) {
-        return labels == null? Collections.<Label>emptySet():labels;
+    private <T> Set<T> returnNotNull(Set<T> labels) {
+        return labels == null? Collections.<T>emptySet():labels;
     }
 
-    public Ticket withLabel(Label label){
+    public Ticket withLabel(String label){
         labels = initializeIfNull(labels);
         labels.add(label);
         return this;

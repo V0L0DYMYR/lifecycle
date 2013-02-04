@@ -1,6 +1,7 @@
 package org.lifecycle.transaction;
 
-import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
 import com.yammer.dropwizard.config.Environment;
 import com.yammer.dropwizard.hibernate.SessionFactoryFactory;
 import org.hibernate.FlushMode;
@@ -9,11 +10,11 @@ import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.context.internal.ManagedSessionContext;
 import org.lifecycle.config.Config;
-import org.lifecycle.domain.Label;
-import org.lifecycle.domain.Ticket;
 import org.mockito.Mockito;
 
 import java.io.IOException;
+import java.util.List;
+import java.util.Set;
 
 import static com.yammer.dropwizard.testing.JsonHelpers.fromJson;
 import static com.yammer.dropwizard.testing.JsonHelpers.jsonFixture;
@@ -21,17 +22,27 @@ import static com.yammer.dropwizard.testing.JsonHelpers.jsonFixture;
 public class TestUnderTransaction {
 
     Session session;
-    SessionFactory hibernateSessionFactory;
+    static SessionFactory hibernateSessionFactory;
 
     public SessionFactory getSessionFactory() {
         return hibernateSessionFactory;
     }
 
-    protected void startTransaction(String configFile) throws IOException, ClassNotFoundException {
+    protected static void initDB(String configFile, List<Class<?>> entities)throws IOException, ClassNotFoundException {
         Config config = fromJson(jsonFixture(configFile), Config.class);
-        hibernateSessionFactory = createHibernateSessionFactory(config);
+        hibernateSessionFactory = createHibernateSessionFactory(config, entities);
+    }
+
+    protected void startSession() {
         session = openSession(hibernateSessionFactory);
         session.beginTransaction();
+    }
+
+    protected void cleanTables(Set<String> tables){
+        for (String table: tables){
+            session.createSQLQuery("delete from "+  table).executeUpdate();
+        }
+        commitAndBeginNewTransaction();
     }
 
     protected Session openSession(SessionFactory hibernateSessionFactory) {
@@ -42,17 +53,21 @@ public class TestUnderTransaction {
         return session;
     }
 
-    protected SessionFactory createHibernateSessionFactory(Config config) throws IOException, ClassNotFoundException {
+    protected static SessionFactory createHibernateSessionFactory(Config config, List<Class<?>> entities) throws IOException, ClassNotFoundException {
         SessionFactoryFactory factory = new SessionFactoryFactory();
         Environment mockEnvironment = Mockito.mock(Environment.class);
-        return factory.build(mockEnvironment, config.getDatabaseConfiguration(), asList(Ticket.class, Label.class));
+        return factory.build(mockEnvironment, config.getDatabaseConfiguration(), entities);
     }
 
-    protected ImmutableList<Class<?>> asList(Class<?>... classes) {
-        return ImmutableList.copyOf(classes);
+    protected static List<Class<?>> asList(Class<?>... classes) {
+        return Lists.newArrayList(classes);
     }
 
-    protected void rollbakTransaction() {
+    protected static <T> Set<T> asSet(T... set) {
+        return Sets.newHashSet(set);
+    }
+
+    protected void rollbakAndCloseSession() {
         ManagedSessionContext.unbind(hibernateSessionFactory);
         final Transaction txn = session.getTransaction();
         if (txn != null && txn.isActive()) {
@@ -61,13 +76,27 @@ public class TestUnderTransaction {
         session.close();
     }
 
-    protected void commitTransaction() {
+    protected void commitAndCloseSession() {
         ManagedSessionContext.unbind(hibernateSessionFactory);
+        commitTransaction();
+        session.close();
+    }
+
+    private void commitTransaction() {
         final Transaction txn = session.getTransaction();
         if (txn != null && txn.isActive()) {
             txn.commit();
         }
-        session.close();
+    }
+
+    protected void commitAndBeginNewTransaction() {
+        commitTransaction();
+        session.beginTransaction();
+    }
+
+    protected void commitAndOpenNewSession(){
+        commitAndCloseSession();
+        startSession();
     }
 
 }

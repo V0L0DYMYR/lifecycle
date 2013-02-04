@@ -29,9 +29,9 @@
     <script type="type/tempale" id="ticket_tmpl">
         <td><%= model.priority%></td>
         <td><a href="#addTicketDialog/<%=model.id%>"><%= model.title %></a></td>
-        <td>
+        <td class="span3">
             <% _.each(model.labels, function(label) { %>
-                <%=label.text%>
+                <a class="label" href="#label/<%=label%>"><%=label%></a>
             <% }); %>
         </td>
         <td><button type="submit" class="btn btn-danger delete">Delete</button></td>
@@ -55,6 +55,12 @@
                                 </option>
                           <% }); %>
                         </select>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label class="control-label">Labels</label>
+                    <div class="controls">
+                        <textarea id="inputTicketLabels" rows="4" ><% _.each(model.labels, function(label) { %><%=label%> <% }); %></textarea>
                     </div>
                 </div>
                 <div class="control-group">
@@ -83,7 +89,7 @@
             </div>
         </div>
     </div>
-    <div class="span10">
+    <div class="span12">
         <div id="ticket_list"></div>
         <div id="ticketDialog"></div>
     </div>

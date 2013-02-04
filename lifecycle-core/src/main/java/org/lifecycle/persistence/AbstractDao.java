@@ -79,6 +79,10 @@ public class AbstractDao<E> {
         return session().createQuery(checkNotNull(s));
     }
 
+    protected Query sql(String sql){
+        return session().createSQLQuery(sql);
+    }
+
     public E saveOrUpdate(E entity) throws HibernateException {
         session().saveOrUpdate(checkNotNull(entity));
         return entity;

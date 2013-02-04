@@ -5,10 +5,9 @@ import com.yammer.dropwizard.config.Environment;
 import com.yammer.dropwizard.db.DatabaseConfiguration;
 import com.yammer.dropwizard.hibernate.HibernateBundle;
 import org.lifecycle.config.Config;
-import org.lifecycle.domain.Label;
+import org.lifecycle.dao.TicketResource;
 import org.lifecycle.domain.Ticket;
 import org.lifecycle.persistence.TicketDao;
-import org.lifecycle.dao.TicketResource;
 
 
 public class Service extends com.yammer.dropwizard.Service<Config> {
@@ -33,7 +32,7 @@ public class Service extends com.yammer.dropwizard.Service<Config> {
         return new TicketResource(ticketDao);
     }
 
-    private final HibernateBundle<Config> hibernate = new HibernateBundle<Config>(Ticket.class, Label.class) {
+    private final HibernateBundle<Config> hibernate = new HibernateBundle<Config>(Ticket.class) {
         @Override
         public DatabaseConfiguration getDatabaseConfiguration(Config configuration) {
             return configuration.getDatabaseConfiguration();

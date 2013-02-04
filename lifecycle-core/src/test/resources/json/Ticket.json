@@ -2,5 +2,5 @@
     "id":null,
     "title":"Effective Java",
     "priority": 1,
-    "labels":[{"id":1, "text":"sprint_1"}]
+    "labels":["sprint_1"]
 }

@@ -1,15 +1,18 @@
+Backbone.renderAllTickets = function(){
+    Backbone.pubSub.trigger('renderAllTickets');
+};
 var Ticket = Backbone.Model.extend({
     defaults: {
         id: null,
         title: 'default title',
         priority:0,
-        labels:[{id:null,text:'sprint_1'}, {id:null, text:'sprint_2'}]
+        labels:[]
     }
 });
 
 var TicketList = Backbone.Collection.extend({
     model: Ticket,
-    url: "http://localhost:8000/ticket",
+    url: "/ticket",
     initialize:function(){
         this.fetch();
     },
@@ -44,7 +47,7 @@ var TicketListView = Backbone.View.extend({
     initialize: function(){
         this.listenTo(this.collection, 'change', this.render);
         this.listenTo(this.collection, 'reset', this.render);
-        Backbone.pubSub.on('my-event', this.render, this);
+        Backbone.pubSub.on('renderAllTickets', this.render, this);
     },
     render: function(){
         var that = this;
@@ -87,11 +90,7 @@ var TicketPageView = Backbone.View.extend({
         this.bindInputToModel('#inputTicketPriority', 'priority');
     },
     saveTicket:function(){
-        var renderAllTickets = function(){
-            console.log('allTickets should be re-rendered');
-            Backbone.pubSub.trigger('my-event');
-        };
-        this.collection.create(this.model, { silent: true, wait: true, success:renderAllTickets});
+        this.collection.create(this.model, { silent: true, wait: true, success:Backbone.renderAllTickets});
         this.collection.sort();
         console.log("save ", this.model);
     },
@@ -112,11 +111,11 @@ var TicketRouter = Backbone.Router.extend({
         Backbone.pubSub = _.extend({}, Backbone.Events);
 
         //collections
-        var tickets = new TicketList();
+        this.tickets = new TicketList();
 
         //views
-        this.allTicketsView = new TicketListView({collection:tickets});
-        this.ticketPage = new TicketPageView({collection:tickets});
+        this.allTicketsView = new TicketListView({collection:this.tickets});
+        this.ticketPage = new TicketPageView({collection:this.tickets});
 
         this.views = [this.allTicketsView, this.ticketPage];
         this.allTickets();
@@ -124,7 +123,8 @@ var TicketRouter = Backbone.Router.extend({
     routes: {
         "allTickets":   "allTickets",
         "addTicketDialog":    "newTicket",
-        "addTicketDialog/:ticketId":"edit"
+        "addTicketDialog/:ticketId":"edit",
+        "label/:label": "ticketsWithLabel"
     },
     allTickets:function(){
         this.hideAll();
@@ -140,6 +140,13 @@ var TicketRouter = Backbone.Router.extend({
         this.hideAll();
         this.ticketPage.populateModel(ticketId);
         $(this.ticketPage.el).show();
+    },
+    ticketsWithLabel:function(label){
+        this.hideAll();
+        console.log('tickets with label ' + label);
+        this.tickets.fetch({data:{label:label}, success:Backbone.renderAllTickets})
+        $(this.allTicketsView.el).show();
+        this.allTicketsView.render();
     },
     hideAll:function(){
         _.each(this.views, function(view){
