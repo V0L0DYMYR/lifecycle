@@ -41,17 +41,20 @@ public class TicketDaoTest extends TestUnderTransaction{
     public void givenTicketWithTwoLabels_afterSecondSaveWithOneLabel_WillHasOnlyOneLabel(){
         Ticket ticket = dao.saveOrUpdate(newTicket(asSet("A", "B")));
         commitAndOpenNewSession();
+
         ticket = dao.saveOrUpdate(new Ticket(ticket.getId(), "B Ticket", 1, asSet("A")));
         assertThat(ticket.getLabels().size()).isEqualTo(1);
     }
 
     @Test
-    public void findTicketsByLabel(){
+    public void givenLabel_whenFindTickets_ReturnAllTicketsWithinAllRlatedLabels(){
         dao.saveOrUpdate(newTicket(asSet("AAA")));
         dao.saveOrUpdate(newTicket(asSet("AAA")));
         dao.saveOrUpdate(newTicket(asSet("BBB")));
         commitAndBeginNewTransaction();
+
         List<Ticket> aTickets = dao.findByLabel("AAA");
+
         assertThat(aTickets.size()).isEqualTo(2);
         Set<String> labels = aTickets.get(0).getLabels();
         assertThat(labels.size()).isEqualTo(1);

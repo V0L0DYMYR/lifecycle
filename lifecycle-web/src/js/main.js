@@ -7,6 +7,16 @@ var Ticket = Backbone.Model.extend({
         title: 'default title',
         priority:0,
         labels:[]
+    },
+    addLabel:function(label){
+        var labels = this.get('labels');
+        if(labels.indexOf(label) == -1)
+            labels.push(label);
+    },
+    removeLabel:function(label){
+        var labels = this.get('labels');
+        var index = labels.indexOf(label);
+        labels.splice(index, 1);
     }
 });
 
@@ -78,7 +88,24 @@ var TicketPageView = Backbone.View.extend({
     events:{
         "click a#saveTicket" : "saveTicket",
         "change input#inputTicketTitle":  "contentChanged",
-        "change select#inputTicketPriority":  "contentChanged"
+        "change select#inputTicketPriority":  "contentChanged",
+        "keypress #inputAddLabel": "createLabelOnEnter",
+        "click a.label": "removeLabel"
+    },
+    removeLabel:function(e){
+        var label = e.currentTarget.id;
+        console.log('remove ' + label);
+        this.model.removeLabel(label);
+        this.render();
+    },
+    createLabelOnEnter:function(e){
+        if (e.keyCode != 13) return;
+        var input = this.$('#inputAddLabel').val();
+        if (!input) return;
+
+        console.log('create label '+ input);
+        this.model.addLabel(input);
+        this.render();
     },
     bindInputToModel:function(inputTagId, fieldName){
         var element = this.$(inputTagId);
@@ -100,7 +127,7 @@ var TicketPageView = Backbone.View.extend({
         this.render();
     },
     populateEmptyModel:function(){
-        this.model = new Ticket();
+        this.model = new Ticket({labels:[]});
         this.render();
     }
 });
