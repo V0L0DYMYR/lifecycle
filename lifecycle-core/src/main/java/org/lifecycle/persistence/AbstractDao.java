@@ -65,6 +65,11 @@ public class AbstractDao<E> {
     }
 
     @SuppressWarnings("unchecked")
+    protected List<Long> listIds(Query query) throws HibernateException {
+        return checkNotNull(query).list();
+    }
+
+    @SuppressWarnings("unchecked")
     protected E get(Serializable id) {
         return (E) session().get(entityClass, checkNotNull(id));
     }
@@ -79,7 +84,7 @@ public class AbstractDao<E> {
         return session().createQuery(checkNotNull(s));
     }
 
-    protected Query sql(String sql){
+    protected SQLQuery sql(String sql){
         return session().createSQLQuery(sql);
     }
 

@@ -53,6 +53,8 @@ public class TicketDaoTest extends TestUnderTransaction{
         commitAndBeginNewTransaction();
         List<Ticket> aTickets = dao.findByLabel("AAA");
         assertThat(aTickets.size()).isEqualTo(2);
+        Set<String> labels = aTickets.get(0).getLabels();
+        assertThat(labels.size()).isEqualTo(1);
     }
 
     private Ticket newTicket() {

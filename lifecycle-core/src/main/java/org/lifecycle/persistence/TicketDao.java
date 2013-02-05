@@ -1,6 +1,8 @@
 package org.lifecycle.persistence;
 
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Restrictions;
+import org.hibernate.type.LongType;
 import org.lifecycle.domain.Ticket;
 
 import java.util.List;
@@ -12,6 +14,10 @@ public class TicketDao extends AbstractDao<Ticket> {
     }
 
     public List<Ticket> findByLabel(String label) {
-        return list(sql("select * from tickets t where t.id in (select l.ticket_id from LABELS l where l.label = '" + label + "')"));
+        List<Long> ids = listIds(sql("select l.ticket_id ID from LABELS l where l.label = :label ")
+                .addScalar("ID", LongType.INSTANCE)
+                .setParameter("label", label));
+
+        return list(criteria().add(Restrictions.in("id", ids)));
     }
 }
