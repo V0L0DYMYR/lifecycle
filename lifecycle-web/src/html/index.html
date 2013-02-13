@@ -1,9 +1,11 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="utf-8">
+    <meta charset="utf-8" name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>Ticket List</title>
-    <link href="http://localhost:8000/bootstrap.min.css" rel="stylesheet" media="screen">
+    <link href="bootstrap.min.css" rel="stylesheet" media="screen">
+    <link href="bootstrap-responsive.css" rel="stylesheet">
     <link rel="shortcut icon" href="#" />
     <style type="text/css">
         [class^="icon-"], [class*=" icon-"] {
@@ -11,12 +13,12 @@
         }
     </style>
 
-    <script src="http://localhost:8000/jquery.js"></script>
-    <script src="http://localhost:8000/json2.js"></script>
-    <script src="http://localhost:8000/underscore.js"></script>
-    <script src="http://localhost:8000/backbone.js"></script>
-    <script src="http://localhost:8000/bootstrap.min.js"></script>
-    <script src="http://localhost:8000/main.js"></script>
+    <script src="jquery.js"></script>
+    <script src="json2.js"></script>
+    <script src="underscore.js"></script>
+    <script src="backbone.js"></script>
+    <script src="bootstrap.min.js"></script>
+    <script src="main.js"></script>
     <script type="type/tempale" id="ticket_table_tmpl">
         <table class="table">
             <thead>
@@ -29,14 +31,14 @@
         </table>
     </script>
     <script type="type/tempale" id="ticket_tmpl">
-        <td><%= model.priority%></td>
-        <td><a href="#addTicketDialog/<%=model.id%>"><%= model.title %></a></td>
+        <td class="span1"><%= model.priority%></td>
+        <td class="span2"><a href="#addTicketDialog/<%=model.id%>"><%= model.title %></a></td>
         <td class="span3">
             <% _.each(model.labels, function(label) { %>
                 <a class="label" href="#label/<%=label%>"><%=label%></a>
             <% }); %>
         </td>
-        <td><button type="submit" class="btn btn-danger delete">Delete</button></td>
+        <td class="span1"><button type="submit" class="btn btn-danger delete">Delete</button></td>
     </script>
     <script type="type/tempale" id="ticket_page_tmpl">
         <form class="form-horizontal">

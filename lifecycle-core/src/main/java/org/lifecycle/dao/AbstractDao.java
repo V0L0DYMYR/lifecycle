@@ -1,4 +1,4 @@
-package org.lifecycle.persistence;
+package org.lifecycle.dao;
 
 import com.yammer.dropwizard.util.Generics;
 import org.hibernate.*;

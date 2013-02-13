@@ -3,7 +3,7 @@
         "driverClass": "org.postgresql.Driver",
         "user": "postgres",
         "password": "root",
-        "url": "jdbc:postgresql://localhost:5432/lifecycle",
+        "url": "jdbc:postgresql://localhost:5432/lifecycle_test",
         "properties":{
             "hibernate.hbm2ddl.auto": "validate",
             "hibernate.dialect": "org.hibernate.dialect.PostgresPlusDialect",

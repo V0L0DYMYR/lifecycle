@@ -1,3 +1,4 @@
+
 Backbone.renderAllTickets = function(){
     Backbone.pubSub.trigger('renderAllTickets');
 };

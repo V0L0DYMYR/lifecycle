@@ -14,11 +14,23 @@ public class Config extends Configuration {
     @JsonProperty
     private DatabaseConfiguration database = new DatabaseConfiguration();
 
+    @NotNull
+    @JsonProperty
+    private Authorization authorization;
+
     public DatabaseConfiguration getDatabaseConfiguration() {
         return database;
     }
 
     public void setDatabase(DatabaseConfiguration database) {
         this.database = database;
+    }
+
+    public Authorization getAuthorization() {
+        return authorization;
+    }
+
+    public void setAuthorization(Authorization authorization) {
+        this.authorization = authorization;
     }
 }

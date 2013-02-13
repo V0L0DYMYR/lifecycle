@@ -5,7 +5,6 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.lifecycle.domain.Ticket;
-import org.lifecycle.persistence.TicketDao;
 import org.lifecycle.transaction.TestUnderTransaction;
 
 import java.util.List;

@@ -8,5 +8,15 @@
             "hibernate.hbm2ddl.auto": "validate",
             "hibernate.dialect": "org.hibernate.dialect.PostgresPlusDialect"
         }
+    },
+    "authorization":{
+        "google":{
+            "userInfoUrl":"https://www.googleapis.com/oauth2/v1/userinfo",
+            "oauth2Url":"https://accounts.google.com/o/oauth2/token",
+            "clientId":"993285940276-u3ai1e3kd2adhfm6551s5lidk6no5uil.apps.googleusercontent.com",
+            "clientSecret":"8smfpPnYx7jbwrEw5PbRVtqk",
+            "redirectUri":"http://localhost:8000/oauth2/google",
+            "grantType":"authorization_code"
+        }
     }
 }

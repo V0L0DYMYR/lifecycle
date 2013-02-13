@@ -1,4 +1,4 @@
-package org.lifecycle.persistence;
+package org.lifecycle.dao;
 
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;

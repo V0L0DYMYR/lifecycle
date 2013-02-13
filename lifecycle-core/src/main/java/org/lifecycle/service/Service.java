@@ -1,13 +1,17 @@
 package org.lifecycle.service;
 
+import com.yammer.dropwizard.auth.oauth.OAuthProvider;
 import com.yammer.dropwizard.config.Bootstrap;
 import com.yammer.dropwizard.config.Environment;
 import com.yammer.dropwizard.db.DatabaseConfiguration;
 import com.yammer.dropwizard.hibernate.HibernateBundle;
 import org.lifecycle.config.Config;
-import org.lifecycle.dao.TicketResource;
+import org.lifecycle.dao.UserDao;
+import org.lifecycle.domain.User;
+import org.lifecycle.resource.TicketResource;
 import org.lifecycle.domain.Ticket;
-import org.lifecycle.persistence.TicketDao;
+import org.lifecycle.dao.TicketDao;
+import org.lifecycle.security.OAuth2Resource;
 
 
 public class Service extends com.yammer.dropwizard.Service<Config> {
@@ -25,6 +29,13 @@ public class Service extends com.yammer.dropwizard.Service<Config> {
     @Override
     public void run(Config config, Environment env) throws Exception {
         env.addResource(createTicketResource());
+        env.addResource(createOAuth2Resource(config));
+        env.addProvider(new OAuthProvider<User>(null, null));
+    }
+
+    private OAuth2Resource createOAuth2Resource(Config config) {
+        final UserDao userDao = new UserDao(hibernate.getSessionFactory());
+        return new OAuth2Resource(userDao, config.getAuthorization());
     }
 
     public TicketResource createTicketResource() {

@@ -1,8 +1,8 @@
-package org.lifecycle.dao;
+package org.lifecycle.resource;
 
 import com.yammer.dropwizard.hibernate.UnitOfWork;
 import org.lifecycle.domain.Ticket;
-import org.lifecycle.persistence.TicketDao;
+import org.lifecycle.dao.TicketDao;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
