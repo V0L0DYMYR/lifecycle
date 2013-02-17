@@ -9,6 +9,9 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
+import static org.lifecycle.Utils.initializeIfNull;
+import static org.lifecycle.Utils.returnNotNull;
+
 @Entity
 @Table(name = "TICKETS")
 public class Ticket {
@@ -18,6 +21,7 @@ public class Ticket {
     private Long id;
     @Column(nullable = false)
     private String title;
+    private String description;
     private Integer priority;
     @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(
@@ -29,6 +33,7 @@ public class Ticket {
     @JsonCreator
     public Ticket(@JsonProperty("ID") Long id,
                   @JsonProperty("TITLE") String title,
+                  @JsonProperty("DESCRIPTION") String description,
                   @JsonProperty("PRIORITY") Integer priority,
                   @JsonProperty("LABELS") Set<String> labels) {
         this.id = id;
@@ -43,6 +48,10 @@ public class Ticket {
         return id;
     }
 
+    public String getDescription() {
+        return description;
+    }
+
     public String getTitle() {
         return title;
     }
@@ -55,18 +64,11 @@ public class Ticket {
         return returnNotNull(labels);
     }
 
-    private <T> Set<T> returnNotNull(Set<T> labels) {
-        return labels == null? Collections.<T>emptySet():labels;
-    }
 
     public Ticket withLabel(String label){
         labels = initializeIfNull(labels);
         labels.add(label);
         return this;
-    }
-
-    private <T> Set<T> initializeIfNull(Set<T> set) {
-        return set == null ? new HashSet<T>(): set;
     }
 
     @Override
