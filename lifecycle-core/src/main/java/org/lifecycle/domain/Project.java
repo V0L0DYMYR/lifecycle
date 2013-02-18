@@ -15,27 +15,12 @@ public class Project {
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     private Long id;
     private String name;
+    @OneToOne(cascade = CascadeType.ALL)
     private User owner;
-    @ManyToMany
-    private Set<User> readers;
-    @ManyToMany
-    private Set<User> editors;
 
     public Project(String name, User owner) {
         this.name = name;
         this.owner = owner;
-    }
-
-    public Project withReader(User user){
-        this.readers = initializeIfNull(this.readers);
-        this.readers.add(user);
-        return this;
-    }
-
-    public Project withEditor(User user){
-        this.editors = initializeIfNull(this.editors);
-        this.editors.add(user);
-        return this;
     }
 
     public Long getId() {
@@ -50,11 +35,4 @@ public class Project {
         return owner;
     }
 
-    public Set<User> getReaders() {
-        return readers;
-    }
-
-    public Set<User> getEditors() {
-        return editors;
-    }
 }

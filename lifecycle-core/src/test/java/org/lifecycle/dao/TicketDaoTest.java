@@ -17,7 +17,8 @@ import static org.fest.assertions.api.Assertions.assertThat;
 public class TicketDaoTest extends TestUnderTransaction {
 
     TicketDao ticketDao;
-    private UserDao userDao;
+    UserDao userDao;
+    ProjectDao projectDao;
 
     @BeforeClass
     public static void init() throws Exception {
@@ -27,32 +28,59 @@ public class TicketDaoTest extends TestUnderTransaction {
     @Before
     public void setUp() {
         startSession();
-        cleanTables(asSet("TICKETS", "LABELS"));
+        cleanTables(asSet("TICKETS", "LABELS", "PROJECTS", "USERS"));
         ticketDao = new TicketDao(getSessionFactory());
         userDao = new UserDao(getSessionFactory());
+        projectDao = new ProjectDao(getSessionFactory());
     }
 
     @After
     public void tearDown() {
-        rollbakAndCloseSession();
+        commitAndCloseSession();
     }
 
     @Test
-    public void givenProjectId_whenGETTikects_ReturnTicketOnlyFromThatproject() {
+    public void givenProjectId_whenGETTikects_ReturnTicketOnlyFromThatProject() {
+        Long projectId = createProjectWithUser();
+        createTicket(projectId);
+        createTicket(projectId);
+        commitAndOpenNewSession();
+        Long projectId_2 = createProjectWithUser();
+        createTicket(projectId_2);
+        commitAndOpenNewSession();
+        List<Ticket> tickets = ticketDao.findByProject(projectId);
+        assertThat(tickets.size()).isEqualTo(2);
+    }
+
+    @Test
+    public void givenUserId_whenGETTickets_ReturnProjectsOnlyThatUsers() {
         User user = createUser();
+        createProject("A project", user);
+        createProject("B project", user);
+        commitAndOpenNewSession();
+
+        User user_2 = createUser();
+        createProject("C project", user_2);
+        commitAndOpenNewSession();
         List<Ticket> tickets = ticketDao.findByUser(user);
+        assertThat(tickets.size()).isEqualTo(2);
     }
 
     private User createUser() {
         startSession();
-        User user = userDao.saveOrUpdate(new User(null, "1", "user@gmail.com", "Ivan Ivanov", "pic", "en"));
+        User user = userDao.saveOrUpdate(newUser());
         commitAndOpenNewSession();
         return user;
     }
 
+    private User newUser() {
+        return new User(null, "1", "user@gmail.com", "Ivan Ivanov", "pic", "en");
+    }
+
     @Test
     public void givenTicketWithNotUniqueLabes_whenSaveTicket_LabelsAreUniqueInTicket() {
-        ticketDao.saveOrUpdate(newTicket(asSet("sprint 1", "sprint 1", "sprint 2", "sprint 1", "sprint 2")));
+        Long projectId = createProjectWithUser();
+        createTicket(projectId, asSet("sprint 1", "sprint 1", "sprint 2", "sprint 1", "sprint 2"));
         List<Ticket> all = ticketDao.findAll();
         Ticket ticket = all.get(0);
         assertThat(ticket.getLabels().size()).isEqualTo(2);
@@ -60,18 +88,24 @@ public class TicketDaoTest extends TestUnderTransaction {
 
     @Test
     public void givenTicketWithTwoLabels_afterSecondSaveWithOneLabel_WillHasOnlyOneLabel() {
-        Ticket ticket = ticketDao.saveOrUpdate(newTicket(asSet("A", "B")));
+        Long projectId = createProjectWithUser();
+        Ticket ticket = ticketDao.saveOrUpdate(newTicket(projectId, asSet("A", "B")));
         commitAndOpenNewSession();
 
-        ticket = ticketDao.saveOrUpdate(new Ticket(ticket.getId(), "B Ticket", "desc", 1, asSet("A")));
+        ticket = ticketDao.saveOrUpdate(new Ticket(ticket.getId(), "B Ticket", "desc", 1, projectId, asSet("A")));
         assertThat(ticket.getLabels().size()).isEqualTo(1);
+    }
+
+    private Long createProject(String name, User user) {
+        return projectDao.saveOrUpdate(new Project(name, user)).getId();
     }
 
     @Test
     public void givenLabel_whenFindTickets_ReturnAllTicketsWithinAllRlatedLabels() {
-        ticketDao.saveOrUpdate(newTicket(asSet("AAA")));
-        ticketDao.saveOrUpdate(newTicket(asSet("AAA")));
-        ticketDao.saveOrUpdate(newTicket(asSet("BBB")));
+        Long projectId = createProjectWithUser();
+        createTicket(projectId, asSet("AAA"));
+        createTicket(projectId, asSet("AAA"));
+        createTicket(projectId, asSet("BBB"));
         commitAndBeginNewTransaction();
 
         List<Ticket> aTickets = ticketDao.findByLabel("AAA");
@@ -81,12 +115,21 @@ public class TicketDaoTest extends TestUnderTransaction {
         assertThat(labels.size()).isEqualTo(1);
     }
 
-    private Ticket newTicket() {
-        return new Ticket(null, "A", "desc", 1, null);
+    private Long createProjectWithUser() {
+        User user = createUser();
+        return projectDao.saveOrUpdate(new Project("project name", user)).getId();
     }
 
-    private Ticket newTicket(Set<String> labels) {
-        return new Ticket(null, "default title", "desc", 1, labels);
+    private Ticket createTicket(Long projectId) {
+        return createTicket(projectId, null);
+    }
+
+    private Ticket createTicket(Long projectId, Set<String> labels) {
+        return ticketDao.saveOrUpdate(newTicket(projectId, labels));
+    }
+
+    private Ticket newTicket(Long projectId, Set<String> labels) {
+        return new Ticket(null, "default title", "desc", 1, projectId, labels);
     }
 
 }

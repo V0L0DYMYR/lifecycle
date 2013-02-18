@@ -22,7 +22,11 @@ public class TicketDao extends AbstractDao<Ticket> {
         return list(criteria().add(Restrictions.in("id", ids)));
     }
 
-    public List<Ticket> findByUser(User user) {
-        return null;
+    public List<Ticket>   findByUser(User user) {
+        return list(criteria().add(Restrictions.in("projectId", user.getProjects())));
+    }
+
+    public List<Ticket> findByProject(long projectId) {
+        return list(criteria().add(Restrictions.eq("projectId", projectId)));
     }
 }

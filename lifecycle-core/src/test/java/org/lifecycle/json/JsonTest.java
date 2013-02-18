@@ -13,7 +13,7 @@ public class JsonTest {
     @Test
     public void jsonTicket() throws Exception{
         fromJson(jsonFixture("json/Ticket.json"), Ticket.class);
-        asJson(new Ticket(null, "Title","desc", 1, null).withLabel("sprint_1"));
+        asJson(new Ticket(null, "Title","desc", 1, 33L, null).withLabel("sprint_1"));
     }
 
     @Test

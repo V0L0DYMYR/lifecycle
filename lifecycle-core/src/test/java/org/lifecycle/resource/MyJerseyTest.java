@@ -1,5 +1,6 @@
 package org.lifecycle.resource;
 
+import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.WebResource;
 import com.sun.jersey.test.framework.JerseyTest;
 import org.junit.Ignore;
@@ -14,7 +15,8 @@ public class MyJerseyTest extends JerseyTest{
     @Test
     @Ignore
     public void test_tmp(){
-        WebResource webResource = resource();
+        Client client = Client.create();
+        WebResource webResource = client.resource("/ticket");
         String s = webResource.path("/ticket").get(String.class);
         System.out.print(s);
     }

@@ -19,6 +19,8 @@ public class Ticket {
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     private Long id;
+    @Column(name = "PROJECT_ID")
+    private Long projectId;
     @Column(nullable = false)
     private String title;
     private String description;
@@ -35,14 +37,21 @@ public class Ticket {
                   @JsonProperty("TITLE") String title,
                   @JsonProperty("DESCRIPTION") String description,
                   @JsonProperty("PRIORITY") Integer priority,
+                  @JsonProperty("PROJECT_ID") Long projectId,
                   @JsonProperty("LABELS") Set<String> labels) {
         this.id = id;
+        this.projectId = projectId;
         this.title = title;
         this.priority = priority;
         this.labels = initializeIfNull(labels);
+        this.description = description;
     }
 
     public Ticket(){}
+
+    public Long getProjectId() {
+        return projectId;
+    }
 
     public Long getId() {
         return id;

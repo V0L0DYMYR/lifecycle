@@ -67,6 +67,10 @@ public class User {
         return locale;
     }
 
+    public Set<Project> getProjects() {
+        return projects;
+    }
+
     @Override
     public String toString() {
         return Objects.toStringHelper(this)
