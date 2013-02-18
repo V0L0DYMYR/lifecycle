@@ -5,6 +5,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Objects;
 
 import javax.persistence.*;
+import java.util.Set;
+
 /*
 9223372036854775807
 
@@ -23,6 +25,8 @@ public class User {
     private String fullName;
     private String picture;
     private String locale;
+    @ManyToMany
+    private Set<Project> projects;
 
     @JsonCreator
     public User(@JsonProperty("ID") Long id,
