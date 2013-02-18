@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" name="viewport" content="width=device-width">
+    <title>Ticket List</title>
+    <link rel="shortcut icon" href="#"/>
+    <script src="jquery.js"></script>
+    <script src="json2.js"></script>
+    <script src="underscore.js"></script>
+    <script src="backbone.js"></script>
+    <script src="main.js"></script>
+
+    <link rel="stylesheet" href="foundation.min.css">
+    <link rel="stylesheet" href="app.css">
+    <link rel="stylesheet" href="ui.css">
+    <script src="modernizr.foundation.js"></script>
+
+    <script type="type/tempale" id="ticket_table_tmpl">
+        <table class="twelve columns">
+            <thead>
+            <tr>
+                <th class="hide-for-small">Priority</th>
+                <th>Title</th>
+                <th class="hide-for-small">Labels</th>
+                <th class="hide-for-small"></th>
+            </tr>
+            </thead>
+            <tbody id="ticket_list_body"></tbody>
+        </table>
+    </script>
+
+    <script type="type/tempale" id="ticket_tmpl">
+        <td class="hide-for-small"><%= model.priority%></td>
+        <td><a href="#addTicketDialog/<%=model.id%>"><%= model.title %></a></td>
+        <td class="hide-for-small">
+            <% _.each(model.labels, function(label) { %>
+            <a class="round white label" href="#label/<%=label%>"><%=label%></a>
+            <% }); %>
+        </td>
+        <td class="hide-for-small">
+            <button type="submit" class="button small black radius delete">Delete</button>
+        </td>
+    </script>
+
+    <script type="type/tempale" id="ticket_page_tmpl">
+        <form>
+            <div class="row">
+                <div class="two mobile-one columns">
+                    <label class="right inline">Title</label>
+                </div>
+                <div class="ten mobile-three columns">
+                    <input type="text" id="inputTicketTitle" value="<%=model.title%>"/>
+                </div>
+            </div>
+            <div class="row">
+                <div class="two mobile-one columns">
+                    <label class="right inline">Priority</label>
+                </div>
+                <div class="ten mobile-three columns">
+                    <select id="inputTicketPriority">
+                        <% _.each([0,1,2,3,4,5], function(priority) { %>
+                        <option
+                        <%=priority==model.priority? 'selected':'' %>>
+                        <%=priority%>
+                        </option>
+                        <% }); %>
+                    </select>
+                </div>
+            </div>
+            <div class="row">
+                <div class="two mobile-one columns">
+                    <label class="right inline">Add Label</label>
+                </div>
+                <div class="ten mobile-three columns">
+                    <input type="text" id="inputAddLabel" autofocus>
+
+                    <p id="label_area"><% _.each(model.labels, function(label) { %>
+                        <a class="round white label" id="<%=label%>" href="#"><i class="icon-remove"></i> <%=label%></a>
+                        <% }); %></p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="offset-by-two">
+                    <a id="saveTicket" href="#allTickets" type="submit" class="button radius">Save</a>
+                </div>
+            </div>
+        </form>
+    </script>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            var router = new TicketRouter();
+            Backbone.history.start();
+        });
+    </script>
+</head>
+
+<body>
+<div class="contain-to-grid">
+    <nav class="top-bar">
+        <ul class="left">
+            <li class="name">
+                <h1><a href="#">Lifecycle</a></h1>
+            </li>
+            <li><a href="#allTickets">All tickets</a></li>
+            <li><a href="#addTicketDialog">New ticket</a></li>
+        </ul>
+        <ul class="right">
+            <li class="search">
+                <form>
+                    <input id="inputSearchLabels" type="text" placeholder="labels">
+                </form>
+            </li>
+        </ul>
+    </nav>
+</div>
+
+<div class="row">
+    <div class="twelve columns">
+        <div id="ticket_list"></div>
+        <div id="ticketDialog"></div>
+    </div>
+</div>
+</body>
+</html>

@@ -4,10 +4,12 @@ import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
 import com.sun.jersey.core.util.MultivaluedMapImpl;
+import com.yammer.dropwizard.hibernate.UnitOfWork;
 import org.eclipse.jetty.util.ajax.JSON;
 import org.lifecycle.config.Authorization;
 import org.lifecycle.config.GoogleAuthorization;
 import org.lifecycle.dao.UserDao;
+import org.lifecycle.domain.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -17,6 +19,7 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
+import java.net.URI;
 import java.util.Map;
 
 @Path("/oauth2")
@@ -36,20 +39,33 @@ public class OAuth2Resource {
 
     @GET
     @Path("/google")
+    @UnitOfWork
     public Response googleCallback(@QueryParam("state") String state, @QueryParam("code") String code){
         log.info("OAuth2 callback from Google - state:{}, code:{}", state, code);
         String token = requestForAccessToken(code);
-        requestForUserInfo(token);
-        return Response.ok().build();
+        User user = requestForUserInfo(token);
+        userDao.saveOrUpdate(user);
+        return Response.seeOther(URI.create("/index.html")).build();
     }
 
-    private void requestForUserInfo(String token) {
+    private User requestForUserInfo(String token) {
         ClientResponse response = getWebResource(googleConfig.getUserInfoUrl())
                 .queryParam(ACCESS_TOKEN, token)
                 .accept(MediaType.APPLICATION_JSON_TYPE)
                 .get(ClientResponse.class);
         String userInfo = response.getEntity(String.class);
         log.info("User Info:"+userInfo);
+        return parseUserInfo(userInfo);
+    }
+
+    private User parseUserInfo(String userInfoString) {
+        Map<String, String> userMap = (Map<String, String>) JSON.parse(userInfoString);
+        String googleId = userMap.get("id");
+        String email = userMap.get("email");
+        String locale = userMap.get("locale");
+        String picture = userMap.get("picture");
+        String fullName = userMap.get("name");
+        return new User(null, googleId, email, fullName, picture, locale);
     }
 
     private WebResource getWebResource(String url) {
@@ -58,11 +74,13 @@ public class OAuth2Resource {
     }
 
     private String requestForAccessToken(String googleAccessCode) {
-        ClientResponse response = getWebResource(googleConfig.getOauth2Url())
+        ClientResponse clientResponse = getWebResource(googleConfig.getOauth2Url())
                 .accept(MediaType.APPLICATION_JSON_TYPE)
                 .type(MediaType.APPLICATION_FORM_URLENCODED_TYPE)
                 .post(ClientResponse.class, getGoogleParamsForAccessToken(googleAccessCode));
-        return parseAccessToken(response.getEntity(String.class));
+        String responseString = clientResponse.getEntity(String.class);
+        log.info("Authorization clientResponse:"+responseString);
+        return parseAccessToken(responseString);
     }
 
     private MultivaluedMap<String, String> getGoogleParamsForAccessToken(String code) {
@@ -76,7 +94,6 @@ public class OAuth2Resource {
     }
 
     private String parseAccessToken(String response) {
-        log.info("Authorization response:"+response);
         Map<String, String> responseMap = (Map<String, String>) JSON.parse(response);
         String accessToken = responseMap.get(ACCESS_TOKEN);
         log.info("OAuth2 Google token:" + accessToken);

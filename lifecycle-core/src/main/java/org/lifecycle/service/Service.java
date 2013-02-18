@@ -43,7 +43,7 @@ public class Service extends com.yammer.dropwizard.Service<Config> {
         return new TicketResource(ticketDao);
     }
 
-    private final HibernateBundle<Config> hibernate = new HibernateBundle<Config>(Ticket.class) {
+    private final HibernateBundle<Config> hibernate = new HibernateBundle<Config>(Ticket.class, User.class) {
         @Override
         public DatabaseConfiguration getDatabaseConfiguration(Config configuration) {
             return configuration.getDatabaseConfiguration();
