@@ -26,6 +26,10 @@ public class User {
     private String picture;
     private String locale;
     @ManyToMany
+    @JoinTable(name = "USERS_PROJECTS",
+            joinColumns = {@JoinColumn(name = "USERS_ID")},
+            inverseJoinColumns = {@JoinColumn(name = "PROJECTS_ID")}
+    )
     private Set<Project> projects;
 
     @JsonCreator
@@ -67,9 +71,6 @@ public class User {
         return locale;
     }
 
-    public Set<Project> getProjects() {
-        return projects;
-    }
 
     @Override
     public String toString() {

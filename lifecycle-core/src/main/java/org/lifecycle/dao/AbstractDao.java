@@ -2,6 +2,8 @@ package org.lifecycle.dao;
 
 import com.yammer.dropwizard.util.Generics;
 import org.hibernate.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.Serializable;
 import java.util.List;
@@ -10,6 +12,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 public class AbstractDao<E> {
 
+    private Logger log =  LoggerFactory.getLogger(getClass());
     private final SessionFactory sessionFactory;
     private final Class<?> entityClass;
 
@@ -19,7 +22,9 @@ public class AbstractDao<E> {
     }
 
     protected Session session() {
-        return sessionFactory.getCurrentSession();
+        Session session = sessionFactory.getCurrentSession();
+        log.info("current session:"+session.hashCode());
+        return session;
     }
 
     protected Criteria criteria() {
@@ -70,7 +75,7 @@ public class AbstractDao<E> {
     }
 
     @SuppressWarnings("unchecked")
-    protected E get(Serializable id) {
+    public E get(Serializable id) {
         return (E) session().get(entityClass, checkNotNull(id));
     }
 
@@ -86,6 +91,10 @@ public class AbstractDao<E> {
 
     protected SQLQuery sql(String sql){
         return session().createSQLQuery(sql);
+    }
+
+    public E merge(E entity){
+        return (E) session().merge(entity);
     }
 
     public E saveOrUpdate(E entity) throws HibernateException {

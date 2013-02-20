@@ -12,16 +12,18 @@ import static org.lifecycle.Utils.initializeIfNull;
 public class Project {
 
     @Id
-    @GeneratedValue(strategy= GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
-    @OneToOne(cascade = CascadeType.ALL)
-    private User owner;
+    @Column(name = "OWNER_ID")
+    private Long ownerId;
 
-    public Project(String name, User owner) {
+    public Project(String name, Long ownerId) {
         this.name = name;
-        this.owner = owner;
+        this.ownerId = ownerId;
     }
+
+    public Project() {}
 
     public Long getId() {
         return id;
@@ -31,8 +33,8 @@ public class Project {
         return name;
     }
 
-    public User getOwner() {
-        return owner;
+    public Long getOwnerId() {
+        return ownerId;
     }
 
 }
