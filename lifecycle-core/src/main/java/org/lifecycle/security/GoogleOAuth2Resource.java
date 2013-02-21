@@ -13,48 +13,57 @@ import org.lifecycle.domain.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.annotation.Resource;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
+import javax.ws.rs.core.NewCookie;
 import javax.ws.rs.core.Response;
 import java.net.URI;
 import java.util.Map;
 
-@Path("/oauth2")
-public class OAuth2Resource {
+@Path("/oauth2/google")
+public class GoogleOAuth2Resource {
 
-    private static final String ACCESS_TOKEN = "access_token";
-    private Logger log =  LoggerFactory.getLogger(OAuth2Resource.class);
+    private Logger LOG = LoggerFactory.getLogger(GoogleOAuth2Resource.class);
     private final Authorization config;
     private final GoogleAuthorization googleConfig;
     private final UserDao userDao;
 
-    public OAuth2Resource(UserDao userDao, Authorization config){
+    public GoogleOAuth2Resource(UserDao userDao, Authorization config) {
         this.config = config;
         this.userDao = userDao;
         this.googleConfig = config.getGoogle();
     }
 
     @GET
-    @Path("/google")
     @UnitOfWork
-    public Response googleCallback(@QueryParam("state") String state, @QueryParam("code") String code){
-        log.info("OAuth2 callback from Google - state:{}, code:{}", state, code);
+    public Response googleCallback(@QueryParam("state") String state, @QueryParam("code") String code) {
+        LOG.info("OAuth2 callback from Google - state:{}, code:{}", state, code);
+
         String token = requestForAccessToken(code);
         User user = requestForUserInfo(token);
         userDao.saveOrUpdate(user);
-        return Response.seeOther(URI.create("/index.html")).build();
+
+        return Response.seeOther(URI.create(config.getHomePage()))
+                .cookie(createCookieWithSecurityToken(token))
+                .build();
+    }
+
+    private NewCookie createCookieWithSecurityToken(String token) {
+        return new NewCookie(config.getSecurityTokenName(), token,
+                "/", null, null, config.getSecurityTokenExpirationTime(), false);
     }
 
     private User requestForUserInfo(String token) {
         ClientResponse response = getWebResource(googleConfig.getUserInfoUrl())
-                .queryParam(ACCESS_TOKEN, token)
+                .queryParam(googleConfig.getAccessTokenName(), token)
                 .accept(MediaType.APPLICATION_JSON_TYPE)
                 .get(ClientResponse.class);
         String userInfo = response.getEntity(String.class);
-        log.info("User Info:"+userInfo);
+        LOG.info("User Info:" + userInfo);
         return parseUserInfo(userInfo);
     }
 
@@ -78,9 +87,10 @@ public class OAuth2Resource {
                 .accept(MediaType.APPLICATION_JSON_TYPE)
                 .type(MediaType.APPLICATION_FORM_URLENCODED_TYPE)
                 .post(ClientResponse.class, getGoogleParamsForAccessToken(googleAccessCode));
-        String responseString = clientResponse.getEntity(String.class);
-        log.info("Authorization clientResponse:"+responseString);
-        return parseAccessToken(responseString);
+        String googleResponse = clientResponse.getEntity(String.class);
+        String googleAccessToken = parseAccessToken(googleResponse);
+        LOG.info("Given Google access token:{}\n, from Authorization client response:{}", googleAccessToken, googleResponse);
+        return googleAccessToken;
     }
 
     private MultivaluedMap<String, String> getGoogleParamsForAccessToken(String code) {
@@ -95,9 +105,7 @@ public class OAuth2Resource {
 
     private String parseAccessToken(String response) {
         Map<String, String> responseMap = (Map<String, String>) JSON.parse(response);
-        String accessToken = responseMap.get(ACCESS_TOKEN);
-        log.info("OAuth2 Google token:" + accessToken);
-        return accessToken;
+        return responseMap.get(googleConfig.getAccessTokenName());
     }
 
 }

@@ -5,6 +5,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class GoogleAuthorization {
 
     @JsonProperty
+    private String accessTokenName;
+    @JsonProperty
     private String oauth2Url;
     @JsonProperty
     private String clientId;
@@ -14,7 +16,16 @@ public class GoogleAuthorization {
     private String redirectUri;
     @JsonProperty
     private String grantType;
+    @JsonProperty
     private String userInfoUrl;
+
+    public String getAccessTokenName() {
+        return accessTokenName;
+    }
+
+    public void setAccessTokenName(String accessTokenName) {
+        this.accessTokenName = accessTokenName;
+    }
 
     public void setOauth2Url(String oauth2Url) {
         this.oauth2Url = oauth2Url;

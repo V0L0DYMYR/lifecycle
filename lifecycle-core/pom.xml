@@ -68,21 +68,21 @@
             <version>0.6.1</version>
         </dependency>
 
-      <!--  <dependency>
-            <groupId>org.hibernate</groupId>
-            <artifactId>hibernate-annotations</artifactId>
-            <version>3.5.6-Final</version>
-        </dependency>
-        <dependency>
-            <groupId>org.hibernate</groupId>
-            <artifactId>hibernate-core</artifactId>
-            <version>4.1.8.Final</version>
-        </dependency>
-        <dependency>
-            <groupId>com.sun.jersey.contribs.jersey-oauth</groupId>
-            <artifactId>oauth-signature</artifactId>
-            <version>1.16</version>
-        </dependency>-->
+        <!--  <dependency>
+              <groupId>org.hibernate</groupId>
+              <artifactId>hibernate-annotations</artifactId>
+              <version>3.5.6-Final</version>
+          </dependency>
+          <dependency>
+              <groupId>org.hibernate</groupId>
+              <artifactId>hibernate-core</artifactId>
+              <version>4.1.8.Final</version>
+          </dependency>
+          <dependency>
+              <groupId>com.sun.jersey.contribs.jersey-oauth</groupId>
+              <artifactId>oauth-signature</artifactId>
+              <version>1.16</version>
+          </dependency>-->
         <dependency>
             <groupId>com.sun.jersey</groupId>
             <artifactId>jersey-client</artifactId>
@@ -129,9 +129,9 @@
                         <configuration>
                             <transformers>
                                 <transformer
-                                        implementation="org.apache.maven.plugins.shade.org.lifecycle.resource.ServicesResourceTransformer"/>
+                                        implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer"/>
                                 <transformer
-                                        implementation="org.apache.maven.plugins.shade.org.lifecycle.resource.ManifestResourceTransformer">
+                                        implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
                                     <mainClass>org.lifecycle.service.Service</mainClass>
                                 </transformer>
                             </transformers>

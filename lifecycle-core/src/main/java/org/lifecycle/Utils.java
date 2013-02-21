@@ -25,4 +25,8 @@ public class Utils {
     public static <T> Set<T> asSet(T... set) {
         return Sets.newHashSet(set);
     }
+
+    public static boolean isNotEmpty(String s){
+        return s != null && s.length() != 0 && s.trim().length() != 0;
+    }
 }

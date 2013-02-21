@@ -12,7 +12,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 public class AbstractDao<E> {
 
-    private Logger log =  LoggerFactory.getLogger(getClass());
+    private Logger LOG =  LoggerFactory.getLogger(getClass());
     private final SessionFactory sessionFactory;
     private final Class<?> entityClass;
 
@@ -23,7 +23,7 @@ public class AbstractDao<E> {
 
     protected Session session() {
         Session session = sessionFactory.getCurrentSession();
-        log.info("current session:"+session.hashCode());
+        LOG.debug("current session:" + session.hashCode());
         return session;
     }
 
