@@ -64,7 +64,8 @@ public class GoogleOAuth2Resource {
                 .get(ClientResponse.class);
         String userInfo = response.getEntity(String.class);
         LOG.info("User Info:" + userInfo);
-        return parseUserInfo(userInfo);
+        User user = parseUserInfo(userInfo);
+        return new User(user, token);
     }
 
     private User parseUserInfo(String userInfoString) {

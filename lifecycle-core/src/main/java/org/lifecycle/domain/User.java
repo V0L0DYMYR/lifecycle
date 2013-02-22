@@ -1,7 +1,5 @@
 package org.lifecycle.domain;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Objects;
 
 import javax.persistence.*;
@@ -16,7 +14,7 @@ import java.util.Set;
 public class User {
 
     @Id
-    @GeneratedValue(strategy= GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Column(name = "GOOGLE_ID")
     private String googleId;
@@ -31,14 +29,10 @@ public class User {
             inverseJoinColumns = {@JoinColumn(name = "PROJECTS_ID")}
     )
     private Set<Project> projects;
+    @Column(name = "SECURITY_TOKEN")
+    private String securityToken;
 
-    @JsonCreator
-    public User(@JsonProperty("ID") Long id,
-                @JsonProperty("GOOGLE_ID") String googleId,
-                @JsonProperty("EMAIL") String email,
-                @JsonProperty("FULL_NAME") String fullName,
-                @JsonProperty("PICTURE") String picture,
-                @JsonProperty("LOCALE") String locale){
+    public User(Long id, String googleId, String email, String fullName, String picture, String locale) {
         this.id = id;
         this.googleId = googleId;
         this.email = email;
@@ -46,6 +40,24 @@ public class User {
         this.picture = picture;
         this.locale = locale;
     }
+
+    public User(User other, String securityToken) {
+        this(other);
+        this.securityToken = securityToken;
+    }
+
+    public User(User other) {
+        this.id = other.id;
+        this.googleId = other.googleId;
+        this.email = other.email;
+        this.fullName = other.fullName;
+        this.picture = other.picture;
+        this.locale = other.locale;
+        this.projects = other.projects;
+        this.securityToken = other.securityToken;
+    }
+
+    public User() {}
 
     public Long getId() {
         return id;
@@ -71,6 +83,9 @@ public class User {
         return locale;
     }
 
+    public String getSecurityToken() {
+        return securityToken;
+    }
 
     @Override
     public String toString() {

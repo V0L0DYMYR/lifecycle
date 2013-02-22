@@ -50,12 +50,12 @@ public class AbstractDao<E> {
     }
 
     @SuppressWarnings("unchecked")
-    protected E uniqueResult(Criteria criteria) throws HibernateException {
+    protected E singleResult(Criteria criteria) throws HibernateException {
         return (E) checkNotNull(criteria).uniqueResult();
     }
 
     @SuppressWarnings("unchecked")
-    protected E uniqueResult(Query query) throws HibernateException {
+    protected E singleResult(Query query) throws HibernateException {
         return (E) checkNotNull(query).uniqueResult();
     }
 

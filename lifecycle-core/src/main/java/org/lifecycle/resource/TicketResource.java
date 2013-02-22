@@ -3,8 +3,12 @@ package org.lifecycle.resource;
 import com.yammer.dropwizard.hibernate.UnitOfWork;
 import org.lifecycle.dao.TicketDao;
 import org.lifecycle.domain.Ticket;
+import org.lifecycle.domain.User;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.ws.rs.*;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import java.util.List;
 
@@ -13,6 +17,7 @@ import java.util.List;
 @Consumes(MediaType.APPLICATION_JSON)
 public class TicketResource {
 
+    private Logger LOG = LoggerFactory.getLogger(TicketResource.class);
     private TicketDao ticketDao;
 
     public TicketResource(TicketDao ticketDao) {
@@ -21,7 +26,8 @@ public class TicketResource {
 
     @GET
     @UnitOfWork
-    public List<Ticket> get() {
+    public List<Ticket> get(@Context User user) {
+        LOG.info(user.toString());
         return ticketDao.findAll();
     }
 

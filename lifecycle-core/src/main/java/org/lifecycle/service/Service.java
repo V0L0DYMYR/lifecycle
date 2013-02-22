@@ -4,6 +4,7 @@ import com.yammer.dropwizard.config.Bootstrap;
 import com.yammer.dropwizard.config.Environment;
 import com.yammer.dropwizard.db.DatabaseConfiguration;
 import com.yammer.dropwizard.hibernate.HibernateBundle;
+import org.lifecycle.UserInjector;
 import org.lifecycle.config.Config;
 import org.lifecycle.dao.TicketDao;
 import org.lifecycle.dao.UserDao;
@@ -30,12 +31,14 @@ public class Service extends com.yammer.dropwizard.Service<Config> {
     public void run(Config config, Environment env) throws Exception {
         env.addResource(createTicketResource());
         env.addResource(createOAuth2Resource(config));
+        env.addProvider(new UserInjector(getUserDao(), config));
     }
 
     private GoogleOAuth2Resource createOAuth2Resource(Config config) {
-        final UserDao userDao = new UserDao(hibernate.getSessionFactory());
-        return new GoogleOAuth2Resource(userDao, config.getAuthorization());
+        return new GoogleOAuth2Resource(getUserDao(), config.getAuthorization());
     }
+
+    private UserDao getUserDao() {return new UserDao(hibernate.getSessionFactory());}
 
     public TicketResource createTicketResource() {
         final TicketDao ticketDao = new TicketDao(hibernate.getSessionFactory());
