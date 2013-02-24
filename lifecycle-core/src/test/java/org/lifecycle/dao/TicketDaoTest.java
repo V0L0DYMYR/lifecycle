@@ -1,6 +1,8 @@
 package org.lifecycle.dao;
 
-import org.junit.*;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
 import org.lifecycle.domain.Project;
 import org.lifecycle.domain.Ticket;
 import org.lifecycle.domain.User;

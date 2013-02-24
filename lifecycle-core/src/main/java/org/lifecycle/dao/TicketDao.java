@@ -1,16 +1,12 @@
 package org.lifecycle.dao;
 
-import com.google.common.collect.Iterables;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
 import org.hibernate.type.LongType;
-import org.lifecycle.domain.Project;
 import org.lifecycle.domain.Ticket;
-import org.lifecycle.domain.User;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.Set;
 
 import static com.google.common.collect.Iterables.isEmpty;
 

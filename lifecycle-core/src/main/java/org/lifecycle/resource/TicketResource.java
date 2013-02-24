@@ -27,7 +27,6 @@ public class TicketResource {
     @GET
     @UnitOfWork
     public List<Ticket> get(@Context User user) {
-        LOG.info(user.toString());
         return ticketDao.findAll();
     }
 

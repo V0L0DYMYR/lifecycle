@@ -6,7 +6,6 @@ import com.sun.jersey.core.spi.component.ComponentScope;
 import com.sun.jersey.server.impl.inject.AbstractHttpContextInjectable;
 import com.sun.jersey.spi.inject.Injectable;
 import com.sun.jersey.spi.inject.InjectableProvider;
-import org.lifecycle.config.Authorization;
 import org.lifecycle.config.Config;
 import org.lifecycle.dao.UserDao;
 import org.lifecycle.domain.User;

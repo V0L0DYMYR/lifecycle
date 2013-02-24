@@ -5,8 +5,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Objects;
 
 import javax.persistence.*;
-import java.util.Collections;
-import java.util.HashSet;
 import java.util.Set;
 
 import static org.lifecycle.Utils.initializeIfNull;
