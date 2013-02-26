@@ -44,7 +44,6 @@ public class UserInjector extends AbstractHttpContextInjectable<User> implements
     @Override
     public User getValue(HttpContext c) {
         String securityToken = c.getRequest().getCookieNameValueMap().getFirst(securityTokenName);
-        User user = userDao.findBySecurityToken(securityToken);
-        return user;
+        return userDao.findBySecurityToken(securityToken);
     }
 }
